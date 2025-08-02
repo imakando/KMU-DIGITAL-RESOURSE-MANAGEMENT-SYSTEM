@@ -8,62 +8,243 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        
-     /* Body background and text */
+    /* Reset and base styles */
+* {
+  box-sizing: border-box;
+}
+
 body {
-  background-color: #f4f6f8; /* Light soft gray */
-  color: #333333; /* Dark text for readability */
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #f0f8ff; /* light blue background */
+  color: #333;
+  margin: 0;
+  padding: 0;
 }
 
-input, textarea, select, button {
-  pointer-events: auto !important;
-  user-select: auto !important;
-  background-color: #fff; /* visible input background */
-  color: #000; /* input text color */
-  z-index: 10; /* ensure above other elements */
-  position: relative; /* reset if needed */
+h1, h2, h3, h4, h5, h6 {
+  color: #1e3a8a; /* nice deep blue */
+  margin-bottom: 0.5rem;
 }
 
-
-./* Text colors */
-.text-gray-800 { color: #2c3e50 !important; }
-.text-gray-600 { color: #7f8c8d !important; }
-.text-gray-500 { color: #95a5a6 !important; }
-.text-red-500 { color: #e74c3c !important; }
-.dark\:text-gray-200 { color: #ecf0f1 !important; }
-.dark\:text-gray-400 { color: #95a5a6 !important; }
-
-/* Background colors */
-.bg-gray-100 { background-color: #ffffff !important; }
-.dark\:bg-gray-700 { background-color: #2c3e50 !important; }
-.bg-blue-500 { background-color: #3498db !important; }
-.bg-red-500 { background-color: #e74c3c !important; }
-.bg-green-500 { background-color: #27ae60 !important; }
-.bg-yellow-500 { background-color: #f39c12 !important; }
-
-/* Button hover colors */
-.hover\:bg-blue-600:hover { background-color: #2980b9 !important; }
-.hover\:bg-red-600:hover { background-color: #c0392b !important; }
-.hover\:bg-green-600:hover { background-color: #1e8449 !important; }
-
-/* Text center */
-.text-center { text-align: center !important; }
-
-/* Rounded corners */
-.rounded-lg { border-radius: 0.5rem !important; }
-
-/* Shadows */
-.shadow-md { box-shadow: 0 4px 6px rgba(0,0,0,0.1) !important; }
-
-/* Links */
 a {
-  color: #3498db;
+  color: #2563eb; /* blue links */
   text-decoration: none;
 }
+
 a:hover {
-  color: #2980b9;
   text-decoration: underline;
+}
+
+/* Panels and containers */
+#loginSelectionPanel,
+#loginFormPanel,
+#mainDashboard,
+#supervisorDashboard,
+#adminDashboard,
+#managerDashboard,
+#sidebar {
+  background: #fff; /* white backgrounds */
+  border-radius: 8px;
+  box-shadow: 0 3px 6px rgba(50, 50, 93, 0.1);
+  padding: 1.5rem;
+  margin: 1rem auto;
+  max-width: 480px;
+}
+
+/* Sidebar styling */
+#sidebar {
+  background: #2563eb; /* bright blue */
+  color: #fff;
+  max-width: 240px;
+  padding: 1rem;
+  position: fixed;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+/* Buttons */
+button,
+input[type="submit"],
+.assignButton {
+  background: #3b82f6; /* bright blue */
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  user-select: none;
+}
+
+button:hover,
+input[type="submit"]:hover,
+.assignButton:hover {
+  background: #2563eb; /* darker blue on hover */
+}
+
+button:disabled,
+input[type="submit"]:disabled {
+  background: #a5b4fc;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* Inputs and selects */
+input[type="text"],
+input[type="password"],
+input[type="email"],
+select,
+textarea {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  margin: 0.3rem 0 1rem 0;
+  border: 1.5px solid #93c5fd;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="email"]:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 4px #3b82f6;
+  background-color: #f0f9ff;
+}
+
+/* Form labels */
+label {
+  font-weight: 600;
+  color: #1e40af;
+}
+
+/* Lists and history items */
+#sessionHistoryList > div,
+#adminComputerList > div,
+#issueList > div,
+#supervisorList > div,
+#managerStudentList > div,
+#managerSupervisorList > div {
+  background: #e0f2fe; /* light blue backgrounds */
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 4px rgb(59 130 246 / 0.2);
+  transition: background-color 0.3s ease;
+}
+
+#sessionHistoryList > div:hover,
+#adminComputerList > div:hover,
+#issueList > div:hover,
+#supervisorList > div:hover,
+#managerStudentList > div:hover,
+#managerSupervisorList > div:hover {
+  background: #bae6fd; /* brighter blue on hover */
+}
+
+/* Status pills */
+.status-pill {
+  padding: 0.15rem 0.6rem;
+  font-size: 0.75rem;
+  border-radius: 12px;
+  font-weight: 600;
+  color: #fff;
+  display: inline-block;
+  min-width: 70px;
+  text-align: center;
+}
+
+.bg-green-500 {
+  background-color: #22c55e !important;
+}
+
+.bg-red-500 {
+  background-color: #ef4444 !important;
+}
+
+.bg-yellow-500 {
+  background-color: #eab308 !important;
+}
+
+.bg-blue-500 {
+  background-color: #3b82f6 !important;
+}
+
+.bg-gray-500 {
+  background-color: #6b7280 !important;
+}
+
+/* Text colors for messages */
+.text-red-500 {
+  color: #ef4444;
+}
+
+.text-green-600 {
+  color: #16a34a;
+}
+
+.text-center {
+  text-align: center;
+}
+
+/* Messages */
+.message {
+  margin: 0.5rem 0;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  font-weight: 600;
+}
+
+.message.success {
+  background-color: #d1fae5;
+  color: #065f46;
+  border: 1px solid #10b981;
+}
+
+.message.error {
+  background-color: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #ef4444;
+}
+
+/* Header */
+#headerUser, #headerRole {
+  font-weight: 700;
+  color: #1e40af;
+}
+
+/* Avatars */
+img.rounded-full {
+  border-radius: 50%;
+  border: 2px solid #3b82f6;
+  object-fit: cover;
+}
+
+/* Scrollbars for sidebars or lists */
+#sidebar::-webkit-scrollbar,
+#sessionHistoryList::-webkit-scrollbar {
+  width: 8px;
+}
+
+#sidebar::-webkit-scrollbar-thumb,
+#sessionHistoryList::-webkit-scrollbar-thumb {
+  background-color: #3b82f6;
+  border-radius: 4px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  #sidebar {
+    display: none;
+  }
+
+  #mainDashboard {
+    margin: 1rem;
+  }
 }
 
     </style>
@@ -1381,6 +1562,7 @@ a:hover {
 </body>
 
 </html>
+
 
 
 
