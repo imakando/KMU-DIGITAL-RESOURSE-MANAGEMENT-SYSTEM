@@ -1,252 +1,32 @@
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KMU DIGITAL RESOURSE MANAGEMENT SYSTEM</title>
+    <title>Computer Lab Management System</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-    /* Reset and base styles */
-* {
-  box-sizing: border-box;
-}
-
-body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: #f0f8ff; /* light blue background */
-  color: #333;
-  margin: 0;
-  padding: 0;
-}
-
-h1, h2, h3, h4, h5, h6 {
-  color: #1e3a8a; /* nice deep blue */
-  margin-bottom: 0.5rem;
-}
-
-a {
-  color: #2563eb; /* blue links */
-  text-decoration: none;
-}
-
-a:hover {
-  text-decoration: underline;
-}
-
-/* Panels and containers */
-#loginSelectionPanel,
-#loginFormPanel,
-#mainDashboard,
-#supervisorDashboard,
-#adminDashboard,
-#managerDashboard,
-#sidebar {
-  background: #fff; /* white backgrounds */
-  border-radius: 8px;
-  box-shadow: 0 3px 6px rgba(50, 50, 93, 0.1);
-  padding: 1.5rem;
-  margin: 1rem auto;
-  max-width: 480px;
-}
-
-/* Sidebar styling */
-#sidebar {
-  background: #2563eb; /* bright blue */
-  color: #fff;
-  max-width: 240px;
-  padding: 1rem;
-  position: fixed;
-  height: 100vh;
-  overflow-y: auto;
-}
-
-/* Buttons */
-button,
-input[type="submit"],
-.assignButton {
-  background: #3b82f6; /* bright blue */
-  color: #fff;
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 5px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  user-select: none;
-}
-
-button:hover,
-input[type="submit"]:hover,
-.assignButton:hover {
-  background: #2563eb; /* darker blue on hover */
-}
-
-button:disabled,
-input[type="submit"]:disabled {
-  background: #a5b4fc;
-  cursor: not-allowed;
-  opacity: 0.7;
-}
-
-/* Inputs and selects */
-input[type="text"],
-input[type="password"],
-input[type="email"],
-select,
-textarea {
-  width: 100%;
-  padding: 0.5rem 0.75rem;
-  margin: 0.3rem 0 1rem 0;
-  border: 1.5px solid #93c5fd;
-  border-radius: 6px;
-  font-size: 1rem;
-  transition: border-color 0.3s ease;
-}
-
-input[type="text"]:focus,
-input[type="password"]:focus,
-input[type="email"]:focus,
-select:focus,
-textarea:focus {
-  outline: none;
-  border-color: #2563eb;
-  box-shadow: 0 0 4px #3b82f6;
-  background-color: #f0f9ff;
-}
-
-/* Form labels */
-label {
-  font-weight: 600;
-  color: #1e40af;
-}
-
-/* Lists and history items */
-#sessionHistoryList > div,
-#adminComputerList > div,
-#issueList > div,
-#supervisorList > div,
-#managerStudentList > div,
-#managerSupervisorList > div {
-  background: #e0f2fe; /* light blue backgrounds */
-  border-radius: 8px;
-  padding: 1rem;
-  margin-bottom: 1rem;
-  box-shadow: 0 1px 4px rgb(59 130 246 / 0.2);
-  transition: background-color 0.3s ease;
-}
-
-#sessionHistoryList > div:hover,
-#adminComputerList > div:hover,
-#issueList > div:hover,
-#supervisorList > div:hover,
-#managerStudentList > div:hover,
-#managerSupervisorList > div:hover {
-  background: #bae6fd; /* brighter blue on hover */
-}
-
-/* Status pills */
-.status-pill {
-  padding: 0.15rem 0.6rem;
-  font-size: 0.75rem;
-  border-radius: 12px;
-  font-weight: 600;
-  color: #fff;
-  display: inline-block;
-  min-width: 70px;
-  text-align: center;
-}
-
-.bg-green-500 {
-  background-color: #22c55e !important;
-}
-
-.bg-red-500 {
-  background-color: #ef4444 !important;
-}
-
-.bg-yellow-500 {
-  background-color: #eab308 !important;
-}
-
-.bg-blue-500 {
-  background-color: #3b82f6 !important;
-}
-
-.bg-gray-500 {
-  background-color: #6b7280 !important;
-}
-
-/* Text colors for messages */
-.text-red-500 {
-  color: #ef4444;
-}
-
-.text-green-600 {
-  color: #16a34a;
-}
-
-.text-center {
-  text-align: center;
-}
-
-/* Messages */
-.message {
-  margin: 0.5rem 0;
-  padding: 0.75rem 1rem;
-  border-radius: 6px;
-  font-weight: 600;
-}
-
-.message.success {
-  background-color: #d1fae5;
-  color: #065f46;
-  border: 1px solid #10b981;
-}
-
-.message.error {
-  background-color: #fee2e2;
-  color: #991b1b;
-  border: 1px solid #ef4444;
-}
-
-/* Header */
-#headerUser, #headerRole {
-  font-weight: 700;
-  color: #1e40af;
-}
-
-/* Avatars */
-img.rounded-full {
-  border-radius: 50%;
-  border: 2px solid #3b82f6;
-  object-fit: cover;
-}
-
-/* Scrollbars for sidebars or lists */
-#sidebar::-webkit-scrollbar,
-#sessionHistoryList::-webkit-scrollbar {
-  width: 8px;
-}
-
-#sidebar::-webkit-scrollbar-thumb,
-#sessionHistoryList::-webkit-scrollbar-thumb {
-  background-color: #3b82f6;
-  border-radius: 4px;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  #sidebar {
-    display: none;
-  }
-
-  #mainDashboard {
-    margin: 1rem;
-  }
-}
-
+        /* Custom styles for the dark mode toggle */
+        body.dark .dark\:bg-gray-800 { background-color: #2D3748; }
+        body.dark .dark\:bg-gray-700 { background-color: #4A5568; }
+        body.dark .dark\:text-gray-200 { color: #E2E8F0; }
+        body.dark .dark\:text-gray-400 { color: #A0AEC0; }
+        body.dark .dark\:border-gray-600 { border-color: #4A5568; }
+        body.dark .dark\:hover\:bg-gray-600:hover { background-color: #4A5568; }
+        .status-pill {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+        .form-label {
+            font-size: 1rem; /* Increased font size */
+            font-weight: 600;
+        }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800 dark:bg-gray-800 dark:text-gray-200">
@@ -275,7 +55,7 @@ img.rounded-full {
                         </li>
                         <li>
                             <a href="#" class="nav-link flex items-center p-3 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200" onclick="showPanel('computerManagementPanel')">
-                                <i class="fas fa-desktop mr-3"></i> COMPUTER MANAGEMENT
+                                <i class="fas fa-desktop mr-3"></i> Computer Management
                             </a>
                         </li>
                         <li>
@@ -312,7 +92,7 @@ img.rounded-full {
                         </li>
                         <li>
                             <a href="#" class="nav-link flex items-center p-3 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200" onclick="showPanel('changePasswordPanel')">
-                                <i class="fas fa-key mr-3"></i> CHANGE PASSWORD
+                                <i class="fas fa-key mr-3"></i> Change Password
                             </a>
                         </li>
                     </ul>
@@ -320,7 +100,7 @@ img.rounded-full {
             </div>
             <div class="mt-8">
                 <button id="logoutButton" class="w-full flex items-center justify-center p-3 text-red-500 bg-red-100 rounded-lg hover:bg-red-200 dark:bg-red-800 dark:hover:bg-red-700 dark:text-red-200 transition-colors duration-200">
-                    <i class="fas fa-sign-out-alt mr-2"></i> LOGOUT
+                    <i class="fas fa-sign-out-alt mr-2"></i> Logout
                 </button>
                 <button id="darkModeToggle" class="w-full flex items-center justify-center p-3 mt-4 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-300 transition-colors duration-200">
                     <i class="fas fa-moon mr-2"></i> Toggle Dark Mode
@@ -342,7 +122,7 @@ img.rounded-full {
                     </div>
                     <div id="supervisorOnDutyPanel" class="hidden">
                         <div id="noSupervisorMessage" class="flex items-center p-2 rounded-md bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-sm">
-                            <i class="fas fa-user-times mr-2"></i> NO SUPERVISOR ON DUTY
+                            <i class="fas fa-user-times mr-2"></i> No supervisor on duty
                         </div>
                         <div id="supervisorOnDutyInfo" class="items-center p-2 rounded-md bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 text-sm hidden">
                             <div class="flex items-center">
@@ -366,7 +146,7 @@ img.rounded-full {
 
             <div id="loginSelectionPanel" class="flex-1 flex flex-col justify-center items-center p-8 bg-gray-100 dark:bg-gray-800 transition-all duration-300">
                 <div class="w-full max-w-2xl bg-white dark:bg-gray-900 p-8 rounded-xl shadow-2xl text-center">
-                    <h2 class="text-3xl font-extrabold text-gray-900 dark:text-gray-100 mb-6">WELCOME TO KMU DIGITAL RESOURSE MANAGEMENT SYSTEM</h2>
+                    <h2 class="text-3xl font-extrabold text-gray-900 dark:text-gray-100 mb-6">Welcome to the Lab Management System</h2>
                     <p class="text-lg text-gray-600 dark:text-gray-400 mb-8">Please select your role to log in.</p>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <button id="managerButton" class="flex flex-col items-center justify-center p-8 bg-purple-100 text-purple-800 rounded-lg shadow-md hover:shadow-xl hover:bg-purple-200 transform hover:scale-105 transition-all duration-300">
@@ -504,22 +284,22 @@ img.rounded-full {
                         <h3 class="text-2xl font-bold mb-4">Student & Supervisor Registration</h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div class="space-y-4">
-                                <h4 class="text-xl font-semibold">REGISTER NEW STUDENTS</h4>
+                                <h4 class="text-xl font-semibold">Register New Student</h4>
                                 <form id="registrationForm" class="space-y-3">
                                     <div>
-                                        <label for="regNameInput" class="form-label block text-gray-700 dark:text-gray-300">FULL NAME</label>
+                                        <label for="regNameInput" class="form-label block text-gray-700 dark:text-gray-300">Full Name</label>
                                         <input type="text" id="regNameInput" required class="mt-1 block w-full border border-gray-300 rounded-md p-2 dark:bg-gray-800 dark:border-gray-600">
                                     </div>
                                     <div>
-                                        <label for="regIdInput" class="form-label block text-gray-700 dark:text-gray-300">STUDENT ID</label>
+                                        <label for="regIdInput" class="form-label block text-gray-700 dark:text-gray-300">Student ID</label>
                                         <input type="text" id="regIdInput" required class="mt-1 block w-full border border-gray-300 rounded-md p-2 dark:bg-gray-800 dark:border-gray-600">
                                     </div>
                                     <div>
-                                        <label for="regHostelInput" class="form-label block text-gray-700 dark:text-gray-300">HOSTEL</label>
+                                        <label for="regHostelInput" class="form-label block text-gray-700 dark:text-gray-300">Hostel</label>
                                         <input type="text" id="regHostelInput" required class="mt-1 block w-full border border-gray-300 rounded-md p-2 dark:bg-gray-800 dark:border-gray-600">
                                     </div>
                                     <div>
-                                        <label for="regRoomInput" class="form-label block text-gray-700 dark:text-gray-300">ROOM</label>
+                                        <label for="regRoomInput" class="form-label block text-gray-700 dark:text-gray-300">Room</label>
                                         <input type="text" id="regRoomInput" required class="mt-1 block w-full border border-gray-300 rounded-md p-2 dark:bg-gray-800 dark:border-gray-600">
                                     </div>
                                     <div>
@@ -542,15 +322,15 @@ img.rounded-full {
                                         <input type="text" id="supRegIdInput" required class="mt-1 block w-full border border-gray-300 rounded-md p-2 dark:bg-gray-800 dark:border-gray-600">
                                     </div>
                                     <div>
-                                        <label for="supRegUsernameInput" class="form-label block text-gray-700 dark:text-gray-300">USERNAME</label>
+                                        <label for="supRegUsernameInput" class="form-label block text-gray-700 dark:text-gray-300">Username</label>
                                         <input type="text" id="supRegUsernameInput" required class="mt-1 block w-full border border-gray-300 rounded-md p-2 dark:bg-gray-800 dark:border-gray-600">
                                     </div>
                                     <div>
-                                        <label for="supRegPasswordInput" class="form-label block text-gray-700 dark:text-gray-300">PASSWORD</label>
+                                        <label for="supRegPasswordInput" class="form-label block text-gray-700 dark:text-gray-300">Password</label>
                                         <input type="password" id="supRegPasswordInput" required class="mt-1 block w-full border border-gray-300 rounded-md p-2 dark:bg-gray-800 dark:border-gray-600">
                                     </div>
                                     <div>
-                                        <label for="supRegEmailInput" class="form-label block text-gray-700 dark:text-gray-300">EMAIL</label>
+                                        <label for="supRegEmailInput" class="form-label block text-gray-700 dark:text-gray-300">Email</label>
                                         <input type="email" id="supRegEmailInput" required class="mt-1 block w-full border border-gray-300 rounded-md p-2 dark:bg-gray-800 dark:border-gray-600">
                                     </div>
                                     <div>
@@ -564,17 +344,17 @@ img.rounded-full {
                         </div>
                     </div>
                     <div id="computerManagementPanel" class="panel hidden bg-white dark:bg-gray-900 p-6 rounded-xl shadow-md">
-                        <h3 class="text-2xl font-bold mb-4">COMPUTER MANAGEMENT</h3>
+                        <h3 class="text-2xl font-bold mb-4">Computer Management</h3>
                         <div id="adminComputerList" class="space-y-3"></div>
                         <div id="computerManagementMessage" class="mt-4 text-sm p-3 rounded-md hidden"></div>
                     </div>
                     <div id="issueManagementPanel" class="panel hidden bg-white dark:bg-gray-900 p-6 rounded-xl shadow-md">
-                        <h3 class="text-2xl font-bold mb-4">REPORTED ISSUES</h3>
+                        <h3 class="text-2xl font-bold mb-4">Reported Issues</h3>
                         <div id="issueList" class="space-y-3"></div>
                         <div id="issueMessage" class="mt-4 text-sm p-3 rounded-md hidden"></div>
                     </div>
                     <div id="supervisorManagementPanel" class="panel hidden bg-white dark:bg-gray-900 p-6 rounded-xl shadow-md">
-                        <h3 class="text-2xl font-bold mb-4">SUPERVISOR ACCOUNTS</h3>
+                        <h3 class="text-2xl font-bold mb-4">Supervisor Accounts</h3>
                         <div id="supervisorList" class="space-y-3"></div>
                     </div>
                 </div>
@@ -584,24 +364,24 @@ img.rounded-full {
                         <h3 class="text-2xl font-bold mb-4">User Reports</h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
-                                <h4 class="text-xl font-semibold mb-2">REGISTERED STUDENTS</h4>
+                                <h4 class="text-xl font-semibold mb-2">Registered Students</h4>
                                 <div id="managerStudentList" class="space-y-3"></div>
                             </div>
                             <div>
-                                <h4 class="text-xl font-semibold mb-2">REGISTERED  SUPERVISORS</h4>
+                                <h4 class="text-xl font-semibold mb-2">Registered Supervisors</h4>
                                 <div id="managerSupervisorList" class="space-y-3"></div>
                             </div>
                         </div>
                     </div>
                     <div id="allActivityLogPanel" class="panel hidden bg-white dark:bg-gray-900 p-6 rounded-xl shadow-md">
-                        <h3 class="text-2xl font-bold mb-4">ACTIVITY LOG</h3>
+                        <h3 class="text-2xl font-bold mb-4">Activity Log</h3>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                             <div class="bg-blue-100 dark:bg-blue-900 p-4 rounded-lg shadow-md">
-                                <p class="text-sm font-medium text-blue-800 dark:text-blue-200">ADMIN ACTIVITIES</p>
+                                <p class="text-sm font-medium text-blue-800 dark:text-blue-200">Admin Activities</p>
                                 <p id="adminActivityCount" class="text-2xl font-bold text-blue-900 dark:text-blue-100"></p>
                             </div>
                             <div class="bg-green-100 dark:bg-green-900 p-4 rounded-lg shadow-md">
-                                <p class="text-sm font-medium text-green-800 dark:text-green-200">SUPERVISOR ACTIVITIES</p>
+                                <p class="text-sm font-medium text-green-800 dark:text-green-200">Supervisor Activities</p>
                                 <p id="supervisorActivityCount" class="text-2xl font-bold text-green-900 dark:text-green-100"></p>
                             </div>
                         </div>
@@ -1560,12 +1340,4 @@ img.rounded-full {
         });
     </script>
 </body>
-
 </html>
-
-
-
-
-
-
-
