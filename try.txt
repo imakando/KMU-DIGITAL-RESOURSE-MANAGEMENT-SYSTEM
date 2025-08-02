@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Computer Lab Management</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        
+        :root {
+            --bg-color: #0f172a; /* Slate 950 */
+            --card-bg: #1e293b; /* Slate 800 */
+            --border-color: #334155; /* Slate 700 */
+            --primary-color: #2dd4bf; /* Teal 400 */
+            --primary-hover: #14b8a6; /* Teal 500 */
+            --text-color: #e2e8f0; /* Slate 200 */
+            --text-secondary: #94a3b8; /* Slate 400 */
+            --success-color: #16a34a; /* Green 600 */
+            --error-color: #dc2626; /* Red 600 */
+            --warning-color: #f59e0b; /* Amber 500 */
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 2rem;
+            box-sizing: border-box;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            background-color: var(--card-bg);
+            border-radius: 1rem;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 1rem;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .logo svg {
+            width: 2rem;
+            height: 2rem;
+            fill: var(--primary-color);
+        }
+
+        .header-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header-info span {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+        .header-info strong {
+            color: var(--text-color);
+        }
+        
+        .header-info .role {
+            text-transform: capitalize;
+            color: var(--primary-color);
+        }
+        
+        .button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+            border: none;
+        }
+        .button:active {
+            transform: scale(0.98);
+        }
+
+        .button.primary {
+            background-color: var(--primary-color);
+            color: var(--bg-color);
+        }
+        .button.primary:hover {
+            background-color: var(--primary-hover);
+        }
+        
+        .button.danger {
+            background-color: var(--error-color);
+            color: white;
+        }
+        .button.danger:hover {
+            background-color: #c02c2c;
+        }
+
+        .button.info {
+            background-color: #3b82f6; /* Blue 500 */
+            color: white;
+        }
+        .button.info:hover {
+            background-color: #2563eb;
+        }
+        
+        .button.secondary {
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+        }
+        .button.secondary:hover {
+            background-color: #475569;
+        }
+
+        .panel-container {
+            display: grid;
+            gap: 2rem;
+        }
+        
+        .login-panel {
+            min-height: 50vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .card {
+            background-color: #1e293b;
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        .card-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        .card-description {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+            display: block;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            border: 1px solid var(--border-color);
+            background-color: #334155;
+            color: var(--text-color);
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+
+        input::placeholder, textarea::placeholder {
+            color: #64748b;
+        }
+        
+        .flex { display: flex; }
+        .flex-col { flex-direction: column; }
+        .gap-2 { gap: 0.5rem; }
+        .gap-4 { gap: 1rem; }
+        .items-center { align-items: center; }
+        .justify-between { justify-content: space-between; }
+        .mt-4 { margin-top: 1rem; }
+        .mb-4 { margin-bottom: 1rem; }
+        .text-center { text-align: center; }
+        .font-bold { font-weight: 700; }
+        .text-sm { font-size: 0.875rem; }
+        .text-lg { font-size: 1.125rem; }
+        .capitalize { text-transform: capitalize; }
+        .rounded-md { border-radius: 0.5rem; }
+        .p-4 { padding: 1rem; }
+        .bg-green-900 { background-color: #0c4a6e; }
+        .text-green-200 { color: #e0f2f1; }
+        .bg-red-900 { background-color: #450a0a; }
+        .text-red-200 { color: #fecaca; }
+        .bg-blue-900 { background-color: #1e3a8a; }
+        .text-blue-200 { color: #dbeafe; }
+        .bg-amber-900 { background-color: #713f12; }
+        .text-amber-200 { color: #fde68a; }
+
+        .status-pill {
+            padding: 0.25rem 0.5rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+        .status-pill.available {
+            background-color: #14532d; /* Green 900 */
+            color: #bbf7d0; /* Green 200 */
+        }
+        .status-pill.occupied {
+            background-color: #7f1d1d; /* Red 900 */
+            color: #fecaca; /* Red 200 */
+        }
+        .status-pill.maintenance {
+            background-color: #4c1d95; /* Purple 900 */
+            color: #e9d5ff; /* Purple 200 */
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            .grid-2 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (min-width: 1024px) {
+            .container { padding: 4rem; }
+            .grid-3 {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 2rem;
+            }
+        }
+
+        .tab-buttons .button {
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem 0.5rem 0 0;
+            background: transparent;
+            color: var(--text-secondary);
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .tab-buttons .button.active {
+            border-bottom: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        
+        .panel { display: none; }
+        .panel.active { display: block; }
+        
+        .list-group {
+            max-height: 200px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            padding-right: 0.5rem;
+        }
+        .list-group-item {
+            background-color: #334155;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .list-group-item.maintenance {
+            background-color: #334155;
+            border-left: 4px solid #8b5cf6;
+        }
+        .list-group-item.occupied {
+            background-color: #334155;
+            border-left: 4px solid #dc2626;
+        }
+        .list-group-item.issue {
+            background-color: #451a03; /* Amber 900 */
+            border-left: 4px solid #d97706; /* Amber 600 */
+            border-radius: 0.5rem;
+        }
+        .list-group-item.resolved {
+            opacity: 0.5;
+        }
+
+        /* Custom scrollbar */
+        .list-group::-webkit-scrollbar {
+            width: 8px;
+        }
+        .list-group::-webkit-scrollbar-track {
+            background: var(--card-bg);
+            border-radius: 10px;
+        }
+        .list-group::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 10px;
+        }
+        .list-group::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Main Container -->
+    <div id="app-container">
+        
+        <!-- Login Panel -->
+        <div id="login-panel" class="login-panel">
+            <div class="card" style="width: 350px;">
+                <div class="card-header">
+                    <h2 class="card-title">Lab Management Login</h2>
+                    <p class="card-description">Sign in as an Admin or Supervisor.</p>
+                </div>
+                <div id="login-message" class="p-4 rounded-md mb-4" style="display: none;"></div>
+                <form id="login-form">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" placeholder="Enter your username" required>
+                    
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="Enter your password" required>
+                    
+                    <button type="submit" class="button primary" style="margin-top: 1rem;">Log In</button>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Main Application Panel (Admin/Supervisor) -->
+        <div id="main-panel" style="display: none;">
+            <header>
+                <div class="logo">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2l-8 4v12l8 4 8-4v-12l-8-4z" />
+                        <path d="M4 6l8 4l8-4" />
+                        <path d="M12 10l-8 4" />
+                        <path d="M12 10l8 4" />
+                        <path d="M12 14v6" />
+                    </svg>
+                    <h1 class="card-title">Lab Management</h1>
+                </div>
+                <div class="header-info">
+                    <span id="header-user-info">Logged in as <strong></strong> (<span class="role"></span>)</span>
+                    <button id="logout-button" class="button danger">Logout</button>
+                </div>
+            </header>
+
+            <!-- Tab Navigation for Admins -->
+            <div id="admin-tabs" class="tab-buttons" style="display: none; border-bottom: 1px solid var(--border-color);">
+                <button class="button active" onclick="showPanel('supervisor-panel')">Supervisor Panel</button>
+                <button class="button" onclick="showPanel('admin-tools-panel')">Admin Tools</button>
+            </div>
+            
+            <div id="app-content" class="panel-container">
+                <!-- Supervisor Panel (default view) -->
+                <div id="supervisor-panel" class="panel active">
+                    <div class="grid-2">
+                        <div class="card">
+                            <div class="card-header" style="text-align: left;">
+                                <h3 class="card-title" style="font-size: 1.25rem;">Student Search & Assignment</h3>
+                                <p class="card-description">Find a student and assign them an available computer.</p>
+                            </div>
+                            <div id="search-message" class="p-4 rounded-md mb-4" style="display: none;"></div>
+                            <div class="flex gap-2 mb-4">
+                                <input type="text" id="student-search-input" placeholder="Student Name or ID">
+                                <button id="search-button" class="button primary">Search</button>
+                            </div>
+                            <div id="student-details" class="card p-4" style="display: none;">
+                                <p class="text-lg font-bold" id="selected-student-name"></p>
+                                <p class="text-sm">Student ID: <strong id="selected-student-id"></strong></p>
+                                <p class="text-sm">Hostel: <strong id="selected-student-hostel"></strong>, Room: <strong id="selected-student-room"></strong></p>
+                                <div class="mt-4">
+                                    <label for="computer-select">Assign to Computer</label>
+                                    <select id="computer-select" required></select>
+                                    <button id="assign-button" class="button primary" style="width: 100%; margin-top: 1rem;">Assign Computer</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header" style="text-align: left;">
+                                <h3 class="card-title" style="font-size: 1.25rem;">Current Lab Status</h3>
+                                <p class="card-description">Overview of all computers and their status.</p>
+                            </div>
+                            <div class="flex gap-4 text-center mb-4">
+                                <div style="flex: 1;">
+                                    <p class="text-lg font-bold" style="color: var(--primary-color);" id="total-computers">0</p>
+                                    <p class="text-sm text-secondary">Total</p>
+                                </div>
+                                <div style="flex: 1;">
+                                    <p class="text-lg font-bold" style="color: var(--success-color);" id="available-computers">0</p>
+                                    <p class="text-sm text-secondary">Available</p>
+                                </div>
+                                <div style="flex: 1;">
+                                    <p class="text-lg font-bold" style="color: var(--error-color);" id="occupied-computers">0</p>
+                                    <p class="text-sm text-secondary">In Use</p>
+                                </div>
+                            </div>
+                            <hr style="border-color: var(--border-color); margin: 1rem 0;">
+                            <h4 class="font-bold mb-2">Occupied Stations</h4>
+                            <div id="occupied-list" class="list-group"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Admin Tools Panel -->
+                <div id="admin-tools-panel" class="panel">
+                    <div class="grid-3">
+                        <div class="card">
+                            <div class="card-header" style="text-align: left;">
+                                <h3 class="card-title" style="font-size: 1.25rem;">Student Registration</h3>
+                                <p class="card-description">Register new students in the system.</p>
+                            </div>
+                            <div id="registration-message" class="p-4 rounded-md mb-4" style="display: none;"></div>
+                            <form id="registration-form" class="flex-col gap-4">
+                                <div>
+                                    <label for="reg-name">Name</label>
+                                    <input type="text" id="reg-name" required>
+                                </div>
+                                <div>
+                                    <label for="reg-id">Student ID</label>
+                                    <input type="text" id="reg-id" required>
+                                </div>
+                                <div>
+                                    <label for="reg-hostel">Hostel</label>
+                                    <input type="text" id="reg-hostel" required>
+                                </div>
+                                <div>
+                                    <label for="reg-room">Room</label>
+                                    <input type="text" id="reg-room" required>
+                                </div>
+                                <button type="submit" class="button primary" style="margin-top: 1rem;">Register Student</button>
+                            </form>
+                        </div>
+                        
+                        <div class="card">
+                            <div class="card-header" style="text-align: left;">
+                                <h3 class="card-title" style="font-size: 1.25rem;">Computer Management</h3>
+                                <p class="card-description">Control station status and kick out students.</p>
+                            </div>
+                            <div id="computer-management-message" class="p-4 rounded-md mb-4" style="display: none;"></div>
+                            <div id="admin-computer-list" class="list-group"></div>
+                        </div>
+                        
+                        <div class="card">
+                            <div class="card-header" style="text-align: left;">
+                                <h3 class="card-title" style="font-size: 1.25rem;">Reported Issues</h3>
+                                <p class="card-description">View and resolve student-reported problems.</p>
+                            </div>
+                            <div id="issue-message" class="p-4 rounded-md mb-4" style="display: none;"></div>
+                            <div id="issue-list" class="list-group"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- DATA INITIALIZATION (SIMULATED DATABASE) ---
+            // A real system would use a backend database. We use localStorage for persistence.
+            function initializeData() {
+                const defaultUsers = [
+                    { name: "Admin", studentId: "ADMIN001", hostel: "N/A", room: "N/A", role: "admin" },
+                    { name: "Supervisor", studentId: "SUP001", hostel: "N/A", room: "N/A", role: "supervisor" },
+                    { name: "John Doe", studentId: "S12345", hostel: "Block A", room: "101", role: "student" },
+                    { name: "Jane Smith", studentId: "S67890", hostel: "Block B", room: "205", role: "student" },
+                ];
+                
+                const defaultComputers = [
+                    { id: 1, available: true, onMaintenance: false, occupiedBy: null, studentId: null },
+                    { id: 2, available: true, onMaintenance: false, occupiedBy: null, studentId: null },
+                    { id: 3, available: true, onMaintenance: false, occupiedBy: null, studentId: null },
+                    { id: 4, available: true, onMaintenance: false, occupiedBy: null, studentId: null },
+                    { id: 5, available: true, onMaintenance: false, occupiedBy: null, studentId: null },
+                    { id: 6, available: true, onMaintenance: false, occupiedBy: null, studentId: null },
+                ];
+
+                if (!localStorage.getItem('users')) {
+                    localStorage.setItem('users', JSON.stringify(defaultUsers));
+                }
+                if (!localStorage.getItem('computers')) {
+                    localStorage.setItem('computers', JSON.stringify(defaultComputers));
+                }
+                if (!localStorage.getItem('issues')) {
+                    localStorage.setItem('issues', '[]');
+                }
+            }
+
+            initializeData();
+            
+            // --- STATE VARIABLES ---
+            let loggedInUser = null;
+            let loggedInRole = null;
+            let students = JSON.parse(localStorage.getItem('users'));
+            let computers = JSON.parse(localStorage.getItem('computers'));
+            let issues = JSON.parse(localStorage.getItem('issues'));
+
+            // --- DOM ELEMENTS ---
+            const loginPanel = document.getElementById('login-panel');
+            const mainPanel = document.getElementById('main-panel');
+            const loginForm = document.getElementById('login-form');
+            const usernameInput = document.getElementById('username');
+            const passwordInput = document.getElementById('password');
+            const loginMessage = document.getElementById('login-message');
+            const logoutButton = document.getElementById('logout-button');
+            const headerUser = document.querySelector('#header-user-info strong');
+            const headerRole = document.querySelector('.header-info .role');
+            
+            const adminTabs = document.getElementById('admin-tabs');
+            const supervisorPanel = document.getElementById('supervisor-panel');
+            const adminToolsPanel = document.getElementById('admin-tools-panel');
+
+            // Supervisor Panel Elements
+            const studentSearchInput = document.getElementById('student-search-input');
+            const searchButton = document.getElementById('search-button');
+            const studentDetails = document.getElementById('student-details');
+            const selectedStudentName = document.getElementById('selected-student-name');
+            const selectedStudentId = document.getElementById('selected-student-id');
+            const selectedStudentHostel = document.getElementById('selected-student-hostel');
+            const selectedStudentRoom = document.getElementById('selected-student-room');
+            const computerSelect = document.getElementById('computer-select');
+            const assignButton = document.getElementById('assign-button');
+            const searchMessage = document.getElementById('search-message');
+            const occupiedList = document.getElementById('occupied-list');
+            const totalComputersSpan = document.getElementById('total-computers');
+            const availableComputersSpan = document.getElementById('available-computers');
+            const occupiedComputersSpan = document.getElementById('occupied-computers');
+
+            // Admin Tools Elements
+            const registrationForm = document.getElementById('registration-form');
+            const regNameInput = document.getElementById('reg-name');
+            const regIdInput = document.getElementById('reg-id');
+            const regHostelInput = document.getElementById('reg-hostel');
+            const regRoomInput = document.getElementById('reg-room');
+            const registrationMessage = document.getElementById('registration-message');
+            const adminComputerList = document.getElementById('admin-computer-list');
+            const issueList = document.getElementById('issue-list');
+            const computerManagementMessage = document.getElementById('computer-management-message');
+            const issueMessage = document.getElementById('issue-message');
+
+            // --- HELPER FUNCTIONS ---
+            function showMessage(element, message, type) {
+                element.style.display = 'block';
+                element.textContent = message;
+                element.className = `p-4 rounded-md mb-4 bg-${type}-900 text-${type}-200`;
+            }
+
+            function hideMessage(element) {
+                element.style.display = 'none';
+            }
+
+            function updateUI() {
+                students = JSON.parse(localStorage.getItem('users'));
+                computers = JSON.parse(localStorage.getItem('computers'));
+                issues = JSON.parse(localStorage.getItem('issues'));
+
+                renderLabStatus();
+                renderOccupiedList();
+                renderAdminTools();
+            }
+
+            // --- LOGIN / LOGOUT LOGIC ---
+            loginForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const username = usernameInput.value;
+                const password = passwordInput.value;
+
+                // Simple simulated credentials
+                if (username === 'admin' && password === 'admin123') {
+                    loggedInUser = 'Admin';
+                    loggedInRole = 'admin';
+                    loginPanel.style.display = 'none';
+                    mainPanel.style.display = 'flex';
+                    adminTabs.style.display = 'flex';
+                    headerUser.textContent = loggedInUser;
+                    headerRole.textContent = loggedInRole;
+                    showPanel('supervisor-panel');
+                    updateUI();
+                } else if (username === 'supervisor' && password === 'sup123') {
+                    loggedInUser = 'Supervisor';
+                    loggedInRole = 'supervisor';
+                    loginPanel.style.display = 'none';
+                    mainPanel.style.display = 'flex';
+                    adminTabs.style.display = 'none'; // Hide admin tools for supervisors
+                    headerUser.textContent = loggedInUser;
+                    headerRole.textContent = loggedInRole;
+                    showPanel('supervisor-panel');
+                    updateUI();
+                } else {
+                    showMessage(loginMessage, 'Invalid username or password.', 'red');
+                }
+            });
+
+            logoutButton.addEventListener('click', () => {
+                loggedInUser = null;
+                loggedInRole = null;
+                loginPanel.style.display = 'flex';
+                mainPanel.style.display = 'none';
+                usernameInput.value = '';
+                passwordInput.value = '';
+                hideMessage(loginMessage);
+            });
+
+            function showPanel(panelId) {
+                document.querySelectorAll('.panel').forEach(panel => {
+                    panel.style.display = 'none';
+                });
+                document.getElementById(panelId).style.display = 'block';
+
+                // Update tab button styles
+                document.querySelectorAll('.tab-buttons .button').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                document.querySelector(`.tab-buttons .button[onclick="showPanel('${panelId}')"]`).classList.add('active');
+            }
+
+            // --- SUPERVISOR PANEL FUNCTIONS ---
+            searchButton.addEventListener('click', () => {
+                const query = studentSearchInput.value.trim();
+                const student = students.find(s => s.name.toLowerCase() === query.toLowerCase() || s.studentId.toLowerCase() === query.toLowerCase());
+
+                if (student) {
+                    studentDetails.style.display = 'block';
+                    selectedStudentName.textContent = student.name;
+                    selectedStudentId.textContent = student.studentId;
+                    selectedStudentHostel.textContent = student.hostel;
+                    selectedStudentRoom.textContent = student.room;
+
+                    renderComputerSelect();
+                    hideMessage(searchMessage);
+                } else {
+                    studentDetails.style.display = 'none';
+                    showMessage(searchMessage, 'Student not found.', 'red');
+                }
+            });
+
+            function renderComputerSelect() {
+                computerSelect.innerHTML = '<option value="">Select an available computer</option>';
+                const availableComputers = computers.filter(c => c.available && !c.onMaintenance);
+                availableComputers.forEach(c => {
+                    const option = document.createElement('option');
+                    option.value = c.id;
+                    option.textContent = `Computer ${c.id}`;
+                    computerSelect.appendChild(option);
+                });
+            }
+
+            assignButton.addEventListener('click', () => {
+                const computerId = computerSelect.value;
+                const studentId = selectedStudentId.textContent;
+                const studentName = selectedStudentName.textContent;
+                
+                if (computerId && studentId) {
+                    const computerIndex = computers.findIndex(c => c.id == computerId);
+                    if (computerIndex !== -1 && computers[computerIndex].available) {
+                        computers[computerIndex].available = false;
+                        computers[computerIndex].occupiedBy = studentName;
+                        computers[computerIndex].studentId = studentId;
+                        localStorage.setItem('computers', JSON.stringify(computers));
+                        
+                        studentSearchInput.value = '';
+                        studentDetails.style.display = 'none';
+                        showMessage(searchMessage, `Computer ${computerId} assigned to ${studentName}.`, 'green');
+                        
+                        updateUI();
+                    } else {
+                        showMessage(searchMessage, 'Selected computer is not available.', 'red');
+                    }
+                } else {
+                    showMessage(searchMessage, 'Please select a student and an available computer.', 'red');
+                }
+            });
+
+            function renderLabStatus() {
+                totalComputersSpan.textContent = computers.length;
+                availableComputersSpan.textContent = computers.filter(c => c.available && !c.onMaintenance).length;
+                occupiedComputersSpan.textContent = computers.filter(c => !c.available && !c.onMaintenance).length;
+            }
+
+            function renderOccupiedList() {
+                occupiedList.innerHTML = '';
+                const occupied = computers.filter(c => !c.available && !c.onMaintenance);
+                occupied.forEach(c => {
+                    const listItem = document.createElement('div');
+                    listItem.className = 'list-group-item occupied';
+                    listItem.innerHTML = `
+                        <div>
+                            <p class="font-bold">Computer ${c.id}</p>
+                            <p class="text-sm">User: ${c.occupiedBy} (ID: ${c.studentId})</p>
+                        </div>
+                        <button class="button danger" onclick="releaseComputer(${c.id})">Release</button>
+                    `;
+                    occupiedList.appendChild(listItem);
+                });
+            }
+            
+            window.releaseComputer = function(computerId) {
+                const computerIndex = computers.findIndex(c => c.id == computerId);
+                if (computerIndex !== -1) {
+                    computers[computerIndex].available = true;
+                    computers[computerIndex].occupiedBy = null;
+                    computers[computerIndex].studentId = null;
+                    localStorage.setItem('computers', JSON.stringify(computers));
+                    showMessage(searchMessage, `Computer ${computerId} has been released.`, 'blue');
+                    updateUI();
+                }
+            };
+
+            // --- ADMIN TOOLS FUNCTIONS ---
+            registrationForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const name = regNameInput.value;
+                const studentId = regIdInput.value;
+                const hostel = regHostelInput.value;
+                const room = regRoomInput.value;
+                
+                if (students.some(s => s.studentId === studentId)) {
+                    showMessage(registrationMessage, `A student with ID ${studentId} already exists.`, 'red');
+                    return;
+                }
+
+                const newStudent = { name, studentId, hostel, room, role: "student" };
+                students.push(newStudent);
+                localStorage.setItem('users', JSON.stringify(students));
+                
+                showMessage(registrationMessage, `${name} has been registered successfully.`, 'green');
+                registrationForm.reset();
+                updateUI();
+            });
+
+            function renderAdminTools() {
+                // Admin Computer List
+                adminComputerList.innerHTML = '';
+                computers.forEach(c => {
+                    const listItem = document.createElement('div');
+                    let statusClass = 'available';
+                    let statusText = 'Available';
+                    let buttonHtml = `<button class="button info" onclick="toggleMaintenance(${c.id})">Maint.</button>`;
+                    
+                    if (!c.available) {
+                        statusClass = 'occupied';
+                        statusText = `Occupied by ${c.occupiedBy}`;
+                        buttonHtml = `
+                            <button class="button danger" onclick="kickUser(${c.id})">Kick</button>
+                            <button class="button info" onclick="toggleMaintenance(${c.id})">Maint.</button>
+                        `;
+                    } else if (c.onMaintenance) {
+                        statusClass = 'maintenance';
+                        statusText = 'Under Maintenance';
+                        buttonHtml = `<button class="button success" onclick="toggleMaintenance(${c.id})">Clear</button>`;
+                    }
+
+                    listItem.className = `list-group-item`;
+                    listItem.innerHTML = `
+                        <div>
+                            <p class="font-bold">Computer ${c.id}</p>
+                            <span class="status-pill ${statusClass}">${statusText}</span>
+                        </div>
+                        <div class="flex gap-2">${buttonHtml}</div>
+                    `;
+                    adminComputerList.appendChild(listItem);
+                });
+                
+                // Issue List
+                issueList.innerHTML = '';
+                issues.filter(i => !i.resolved).forEach(i => {
+                    const listItem = document.createElement('div');
+                    listItem.className = 'list-group-item issue';
+                    listItem.innerHTML = `
+                        <div>
+                            <p class="font-bold">Computer ${i.computerId}</p>
+                            <p class="text-sm">${i.description}</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <button class="button primary" onclick="resolveIssue(${i.id})">Resolve</button>
+                        </div>
+                    `;
+                    issueList.appendChild(listItem);
+                });
+            }
+            
+            window.toggleMaintenance = function(computerId) {
+                const computerIndex = computers.findIndex(c => c.id == computerId);
+                if (computerIndex !== -1) {
+                    computers[computerIndex].onMaintenance = !computers[computerIndex].onMaintenance;
+                    if (computers[computerIndex].onMaintenance) {
+                        computers[computerIndex].available = true;
+                        computers[computerIndex].occupiedBy = null;
+                        computers[computerIndex].studentId = null;
+                    }
+                    localStorage.setItem('computers', JSON.stringify(computers));
+                    showMessage(computerManagementMessage, `Computer ${computerId} status changed.`, 'blue');
+                    updateUI();
+                }
+            };
+            
+            window.kickUser = function(computerId) {
+                const computerIndex = computers.findIndex(c => c.id == computerId);
+                if (computerIndex !== -1) {
+                    const user = computers[computerIndex].occupiedBy;
+                    computers[computerIndex].available = true;
+                    computers[computerIndex].occupiedBy = null;
+                    computers[computerIndex].studentId = null;
+                    localStorage.setItem('computers', JSON.stringify(computers));
+                    showMessage(computerManagementMessage, `${user} has been kicked from Computer ${computerId}.`, 'red');
+                    updateUI();
+                }
+            };
+
+            window.resolveIssue = function(issueId) {
+                const issueIndex = issues.findIndex(i => i.id === issueId);
+                if (issueIndex !== -1) {
+                    issues[issueIndex].resolved = true;
+                    localStorage.setItem('issues', JSON.stringify(issues));
+                    showMessage(issueMessage, `Issue for Computer ${issues[issueIndex].computerId} has been resolved.`, 'green');
+                    updateUI();
+                }
+            };
+
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,153 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<style>
+
+
+
+/* styles.css */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f9;
+  color: #333;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.container {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  width: 400px;
+  text-align: center;
+}
+
+h1 {
+  color: #4CAF50;
+  margin-bottom: 20px;
+}
+
+.info {
+  margin-bottom: 15px;
+}
+
+.waitlist-form {
+  margin-bottom: 20px;
+}
+
+.waitlist-form label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: #555;
+}
+
+.waitlist-form input {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.waitlist-form button {
+  width: 100%;
+  padding: 10px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.waitlist-form button:hover {
+  background-color: #45a049;
+}
+
+.waitlist {
+  background-color: #f9f9f9;
+  padding: 15px;
+  border-radius: 4px;
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.waitlist ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.waitlist li {
+  background-color: #e2f7e2;
+  margin: 5px 0;
+  padding: 10px;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #333;
+}
+
+.waitlist li span {
+  font-weight: bold;
+}
+
+.waitlist li + li {
+  margin-top: 10px;
+}
+
+</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Computer Lab Waitlist</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <div class="container">
+    <h1>Computer Lab Waitlist</h1>
+
+    <!-- Information Section -->
+    <div class="info">
+      <p>The lab is currently full. Please add your name to the waitlist, and you will be notified when a computer is available.</p>
+    </div>
+
+    <!-- Waitlist Form -->
+    <form class="waitlist-form" id="waitlist-form">
+      <label for="name">Full Name:</label>
+      <input type="text" id="email address" placeholder="Enter your email address" required>
+
+ <label for="studentId">Student Name:</label>
+      <input type="text" id="studentId" placeholder="Enter your student Name" required>
+
+ <label for="studentId">program of study:</label>
+      <input type="text" id="studentId" placeholder="program of study" required>
+      
+      <label for="studentId">Student ID:</label>
+      <input type="text" id="studentId" placeholder="Enter your student ID" required>
+      
+      <button type="submit">Add to Waitlist</button>
+    </form>
+
+    <!-- Waitlist Display -->
+    <h2>Current Waitlist</h2>
+    <div class="waitlist">
+      <ul id="waitlist">
+        <!-- Waitlist Entries Will Appear Here -->
+      </ul>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

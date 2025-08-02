@@ -1,0 +1,188 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservation Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color:black;
+            
+        
+        }
+
+        .container {
+            width: 50%;
+            margin: 50px auto;
+            padding: 20px;
+            background-color:green;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color:orange;
+        }
+
+        label {
+            font-size: 16px;
+            font-weight: bold;
+            margin: 10px 0;
+            display: block;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #004085;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #003366;
+        }
+
+        .error {
+            color: red;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>RESERVE YOURSELF A STATION</h1>
+        
+        <form id="reservation-form">
+            <label for="name">Your Name:</label>
+            <input type="text" id="name" name="name" placeholder="Enter your name" required>
+
+            <label for="email">Email Address:</label>
+            <input type="email" id="email" name="email" placeholder="Enter your email" required>
+
+            <label for="computer">SELECT STATION</label>
+            <select id="computer" name="computer" required>
+                <option value="" disabled selected>Select a computer</option>
+                <option value="STATION 1">STATION 1</option>
+                <option value="STATION 2">STATION 2</option>
+                <option value="STATION 3">STATION 3</option>
+                <option value="STATION 4">STATION 4</option>
+ <option value="STATION 4">STATION 5</option>
+ <option value="STATION 4">STATION 6</option>
+ <option value="STATION 4">STATION 7</option>
+ <option value="STATION 4">STATION 8</option>
+ <option value="STATION 4">STATION 9</option>
+ <option value="STATION 4">STATION 10</option>
+ <option value="STATION 4">STATION 11</option>
+ <option value="STATION 4">STATION 12</option>
+ <option value="STATION 4">STATION 13</option>
+ <option value="STATION 4">STATION 14</option>
+ <option value="STATION 4">STATION 15</option>
+ <option value="STATION 4">STATION 16</option>
+ <option value="STATION 4">STATION 17</option>
+ <option value="STATION 4">STATION 18</option>
+ <option value="STATION 4">STATION 19</option>
+ <option value="STATION 4">STATION 20</option>
+ <option value="STATION 4">STATION 21</option>
+ <option value="STATION 4">STATION 22</option>
+ <option value="STATION 4">STATION 23</option>
+ <option value="STATION 4">STATION 24</option>
+ <option value="STATION 4">STATION 25</option>
+ <option value="STATION 4">STATION 26</option>
+ <option value="STATION 4">STATION 27</option>
+ <option value="STATION 4">STATION 28</option>
+ <option value="STATION 4">STATION 29</option>
+ <option value="STATION 4">STATION 30</option>
+ <option value="STATION 4">STATION 31</option>
+ <option value="STATION 4">STATION 32</option>
+ <option value="STATION 4">STATION 33</option>
+ <option value="STATION 4">STATION 34</option>
+ <option value="STATION 4">STATION 35</option>
+ <option value="STATION 4">STATION 36</option>
+ <option value="STATION 4">STATION 37</option>
+ <option value="STATION 4">STATION 38</option>
+ <option value="STATION 4">STATION 39</option>
+ <option value="STATION 4">STATION 40</option>
+ <option value="STATION 4">STATION 41</option>
+ <option value="STATION 4">STATION 42</option>
+ <option value="STATION 4">STATION 43</option>
+ <option value="STATION 4">STATION 44</option>
+                    <option value="STATION 4">STATION 45</option>
+            </select>
+
+            <label for="start-time">Start Time:</label>
+            <input type="datetime-local" id="start-time" name="start-time" required>
+
+            <label for="end-time">End Time:</label>
+            <input type="datetime-local" id="end-time" name="end-time" required>
+
+            <label for="comments">Additional Comments (optional):</label>
+            <textarea id="comments" name="comments" rows="4" placeholder="Enter any special requests or comments"></textarea>
+
+            <button type="submit">Submit Reservation</button>
+            <div class="error" id="error-message"></div>
+        </form>
+    </div>
+
+    <script>
+        // Validate and handle form submission
+        document.getElementById('reservation-form').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            // Clear previous error messages
+            document.getElementById('error-message').textContent = '';
+
+            // Get form data
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const computer = document.getElementById('computer').value;
+            const startTime = document.getElementById('start-time').value;
+            const endTime = document.getElementById('end-time').value;
+
+            // Basic form validation
+            if (!name || !email || !computer || !startTime || !endTime) {
+                document.getElementById('error-message').textContent = 'Please fill in all required fields.';
+                return;
+            }
+
+            // Check if start time is before end time
+            if (new Date(startTime) >= new Date(endTime)) {
+                document.getElementById('error-message').textContent = 'Start time must be before end time.';
+                return;
+            }
+
+            // Data to be sent to backend
+            const reservationData = {
+                name: name,
+                email: email,
+                computer: computer,
+                start_time: startTime,
+                end_time: endTime,
+                comments: document.getElementById('comments').value.trim(),
+            };
+
+            // Here, you'd send the data to the backend, for example, using fetch
+            console.log('Reservation Data:', reservationData);
+
+            // Show a success message (this would be replaced with actual success logic)
+            alert('Reservation submitted successfully!');
+
+            // Optionally, you can reset the form
+            document.getElementById('reservation-form').reset();
+        });
+    </script>
+</body>
+</html>

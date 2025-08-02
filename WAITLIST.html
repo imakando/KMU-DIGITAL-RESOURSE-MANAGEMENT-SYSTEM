@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Computer Lab Waitlist</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      color: #333;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      position: relative;
+    }
+
+    .profile-photo {
+      position: absolute;
+      top: 10px;
+      right: 1px;
+      text-align: center;
+    }
+
+    #photoUpload {
+      display: block;
+      margin-bottom: 30px;
+    }
+
+    #profileImage {
+      width: 250px;
+      height: 300px;
+      object-fit: cover;
+      border-radius: 70%;
+      border: 5px solid #4CAF50;
+      display: none;
+    }
+
+    .container {
+      background-color: orange;
+      padding: 40px;
+      border-radius: 15px;
+      box-shadow: 0 10px 10px rgba(0, 0, 0, 0.1);
+      width: 550px;
+      text-align: center;
+    }
+
+    h1 {
+      color: #4CAF50;
+      margin-bottom: 20px;
+    }
+
+    .info {
+      margin-bottom: 15px;
+    }
+
+    .waitlist-form {
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    .waitlist-form label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 14px;
+      color: #555;
+    }
+
+    .waitlist-form input {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 15px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 16px;
+    }
+
+    .waitlist-form input:invalid {
+      border-color: red;
+    }
+
+    .waitlist-form button {
+      width: 100%;
+      padding: 10px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .waitlist-form button:hover {
+      background-color: #45a049;
+    }
+
+    .waitlist {
+      background-color: #f9f9f9;
+      padding: 15px;
+      border-radius: 4px;
+      box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .waitlist ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    .waitlist li {
+      background-color: #e2f7e2;
+      margin: 5px 0;
+      padding: 10px;
+      border-radius: 4px;
+      font-size: 14px;
+      color: #333;
+    }
+
+    .waitlist li + li {
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+ <div class="profile-photo">
+  <input type="file" id="photoUpload" accept="image/*" />
+  <div id="profilePreview" style="display: none;">
+    <img id="profileImage" src="" alt="Profile Photo" />
+    <div id="userNameLabel" style="margin-top: 10px; font-weight: bold; color: #333;"></div>
+  </div>
+</div>
+
+
+  <!-- Main Container -->
+  <div class="container">
+    <h1>Computer Lab Waitlist</h1>
+
+    <div class="info">
+      <p>The lab is currently full. Please add your name to the waitlist, and you will be notified when a computer is available.</p>
+    </div>
+
+    <!-- Waitlist Form -->
+    <form class="waitlist-form" id="waitlist-form">
+      <label for="email">Email Address:</label>
+      <input type="email" id="email" name="email" placeholder="Enter your email address" required />
+
+      <label for="fullName">Full Name:</label>
+      <input type="text" id="fullName" name="fullName" placeholder="Enter your full name" required />
+
+      <label for="program">Program of Study:</label>
+      <input type="text" id="program" name="program" placeholder="Program of study" required />
+
+      <label for="studentId">Student ID:</label>
+      <input type="text" id="studentId" name="studentId" placeholder="Enter your student ID" required />
+
+      <button type="submit">Add to Waitlist</button>
+    </form>
+
+    <h2>Current Waitlist</h2>
+    <div class="waitlist">
+      <ul id="waitlist">
+        <!-- Waitlist Entries Will Appear Here -->
+      </ul>
+    </div>
+  </div>
+
+ <script>
+  const photoUpload = document.getElementById('photoUpload');
+  const profileImage = document.getElementById('profileImage');
+  const profilePreview = document.getElementById('profilePreview');
+  const userNameLabel = document.getElementById('userNameLabel');
+  const fullNameInput = document.getElementById('fullName');
+
+  photoUpload.addEventListener('change', function () {
+    const file = this.files[0];
+
+    if (file && file.type.startsWith('image/')) {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        profileImage.src = e.target.result;
+        profileImage.style.display = 'block';
+
+        // Get the name from the input field
+        const userName = fullNameInput.value.trim();
+        userNameLabel.textContent = userName ? userName : "Unnamed User";
+
+        // Hide the file input, show profile
+        photoUpload.style.display = 'none';
+        profilePreview.style.display = 'block';
+      };
+      reader.readAsDataURL(file);
+    } else {
+      alert("Please upload a valid image file.");
+    }
+  });
+</script>
+  
+</body>
+</html>
