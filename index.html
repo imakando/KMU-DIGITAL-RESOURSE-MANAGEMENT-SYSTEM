@@ -16,6 +16,14 @@ body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+input, textarea, select, button {
+  pointer-events: auto !important;
+  user-select: auto !important;
+  background-color: #fff; /* visible input background */
+  color: #000; /* input text color */
+  z-index: 10; /* ensure above other elements */
+  position: relative; /* reset if needed */
+}
 
 
 ./* Text colors */
@@ -1373,6 +1381,7 @@ a:hover {
 </body>
 
 </html>
+
 
 
 
