@@ -9,23 +9,255 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         
-        body.dark .dark\:bg-gray-800 { background-color: #2D3748; }
-        body.dark .dark\:bg-gray-700 { background-color: #4A5568; }
-        body.dark .dark\:text-gray-200 { color: #E2E8F0; }
-        body.dark .dark\:text-gray-400 { color: #A0AEC0; }
-        body.dark .dark\:border-gray-600 { border-color: #4A5568; }
-        body.dark .dark\:hover\:bg-gray-600:hover { background-color: #4A5568; }
-        .status-pill {
-            display: inline-block;
-            padding: 0.25rem 0.5rem;
-            border-radius: 9999px;
-            font-size: 0.75rem;
-            font-weight: bold;
-        }
-        .form-label {
-            font-size: 1rem; 
-            font-weight: 600;
-        }
+       /* ===== Base Reset and Fonts ===== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f9fafb;
+  color: #1f2937;
+  line-height: 1.6;
+  font-size: 16px;
+  min-height: 100vh;
+}
+
+/* ===== Container and Layout ===== */
+.container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+/* ===== Typography ===== */
+h1, h2, h3, h4, h5, h6 {
+  color: #111827;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+p {
+  color: #4b5563;
+  margin-bottom: 1rem;
+}
+
+/* ===== Buttons ===== */
+button {
+  cursor: pointer;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  padding: 0.6rem 1.2rem;
+  transition: background-color 0.3s ease, box-shadow 0.2s ease;
+  user-select: none;
+}
+
+button:focus {
+  outline: 3px solid #2563eb; /* blue focus ring */
+  outline-offset: 2px;
+}
+
+/* Primary button */
+.btn-primary {
+  background-color: #2563eb; /* Blue 600 */
+  color: #ffffff;
+  box-shadow: 0 4px 6px rgba(37, 99, 235, 0.4);
+}
+
+.btn-primary:hover {
+  background-color: #1e40af; /* Blue 800 */
+  box-shadow: 0 6px 10px rgba(30, 64, 175, 0.5);
+}
+
+/* Secondary button */
+.btn-secondary {
+  background-color: #6b7280; /* Gray 500 */
+  color: #fff;
+}
+
+.btn-secondary:hover {
+  background-color: #4b5563; /* Gray 700 */
+}
+
+/* Danger button */
+.btn-danger {
+  background-color: #dc2626; /* Red 600 */
+  color: #fff;
+}
+
+.btn-danger:hover {
+  background-color: #991b1b; /* Red 800 */
+}
+
+/* Disabled button */
+button:disabled,
+button[disabled] {
+  background-color: #9ca3af; /* Gray 400 */
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* ===== Forms ===== */
+input[type="text"],
+input[type="password"],
+input[type="email"],
+select,
+textarea {
+  width: 100%;
+  padding: 0.6rem 1rem;
+  border: 1.5px solid #d1d5db; /* Gray 300 */
+  border-radius: 6px;
+  font-size: 1rem;
+  color: #374151;
+  transition: border-color 0.3s ease;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="email"]:focus,
+select:focus,
+textarea:focus {
+  border-color: #2563eb; /* Blue 600 */
+  outline: none;
+  box-shadow: 0 0 6px rgba(37, 99, 235, 0.5);
+}
+
+/* Labels */
+label {
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 0.4rem;
+  display: block;
+}
+
+/* ===== Cards / Panels ===== */
+.card {
+  background-color: #ffffff;
+  border-radius: 10px;
+  padding: 1.5rem;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.05);
+  margin-bottom: 1.5rem;
+  transition: box-shadow 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* ===== Alerts and Messages ===== */
+.alert {
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.alert-success {
+  background-color: #d1fae5; /* green-100 */
+  color: #065f46; /* green-800 */
+  border: 1px solid #10b981; /* green-500 */
+}
+
+.alert-error {
+  background-color: #fee2e2; /* red-100 */
+  color: #991b1b; /* red-800 */
+  border: 1px solid #ef4444; /* red-500 */
+}
+
+/* ===== Tables ===== */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1.5rem;
+}
+
+thead tr {
+  background-color: #2563eb;
+  color: white;
+  text-align: left;
+}
+
+th, td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+tbody tr:hover {
+  background-color: #f3f4f6;
+}
+
+/* ===== Flex Utility ===== */
+.flex {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.flex-center {
+  justify-content: center;
+  align-items: center;
+}
+
+.flex-column {
+  flex-direction: column;
+}
+
+/* ===== Status Pills ===== */
+.status-pill {
+  padding: 0.25rem 0.6rem;
+  border-radius: 9999px;
+  font-weight: 700;
+  font-size: 0.75rem;
+  color: white;
+  display: inline-block;
+  min-width: 70px;
+  text-align: center;
+}
+
+.status-green {
+  background-color: #16a34a; /* green-600 */
+}
+
+.status-red {
+  background-color: #dc2626; /* red-600 */
+}
+
+.status-yellow {
+  background-color: #ca8a04; /* yellow-600 */
+}
+
+.status-gray {
+  background-color: #6b7280; /* gray-500 */
+}
+
+/* ===== Scrollbars for overflow areas ===== */
+.scrollable {
+  max-height: 400px;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+  body {
+    font-size: 14px;
+  }
+  .container {
+    margin: 1rem;
+    padding: 0 0.5rem;
+  }
+  .flex {
+    flex-direction: column;
+  }
+  button {
+    width: 100%;
+  }
+}
+
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800 dark:bg-gray-800 dark:text-gray-200">
@@ -1341,4 +1573,5 @@
 </body>
 
 </html>
+
 
