@@ -9,24 +9,306 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        /* Custom styles for the dark mode toggle */
-        body.dark .dark\:bg-gray-800 { background-color: GREEN; }
-        body.dark .dark\:bg-gray-700 { background-color: blue; }
-        body.dark .dark\:text-gray-200 { color: #E2E8F0; }
-        body.dark .dark\:text-gray-400 { color: #A0AEC0; }
-        body.dark .dark\:border-gray-600 { border-color: #4A5568; }
-        body.dark .dark\:hover\:bg-gray-600:hover { background-color: #4A5568; }
-        .status-pill {
-            display: inline-block;
-            padding: 5rem 0.5rem;
-            border-radius: 9999px;
-            font-size: 15px;
-            font-weight: bold;
-        }
-        .form-label {
-            font-size: 5rem; /* Increased font size */
-            font-weight: 600;
-        }
+        
+  /* --- UPDATED COLOR SCHEME & FONT --- */
+  body {
+    background-color: #f4f7fa;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #222831;
+    margin: 0;
+    font-size: 16px;
+  }
+
+  /* Dark mode toggle can be added later, default light for now */
+  .dark {
+    background-color: #121212;
+    color: #eee;
+  }
+
+  h1, h2, h3, h4, h5 {
+    font-weight: 700;
+    color: #30475e;
+  }
+
+  button {
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 6px;
+    border: none;
+    padding: 10px 16px;
+    transition: background-color 0.3s ease;
+  }
+
+  button:hover {
+    filter: brightness(0.9);
+  }
+
+  input[type=text], input[type=password], select {
+    font-size: 1rem;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1.8px solid #cbd5e1;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  input[type=text]:focus, input[type=password]:focus, select:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 5px #3b82f6;
+  }
+
+  label {
+    font-weight: 600;
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 24px auto;
+    padding: 0 20px;
+  }
+
+  .flex {
+    display: flex;
+  }
+
+  .flex-column {
+    flex-direction: column;
+  }
+
+  .items-center {
+    align-items: center;
+  }
+
+  .justify-between {
+    justify-content: space-between;
+  }
+
+  .gap-4 {
+    gap: 16px;
+  }
+
+  .mb-4 {
+    margin-bottom: 16px;
+  }
+
+  .rounded-lg {
+    border-radius: 12px;
+  }
+
+  .shadow-md {
+    box-shadow: 0 4px 8px rgb(0 0 0 / 0.1);
+  }
+
+  .bg-white {
+    background-color: #ffffff;
+  }
+
+  .bg-primary {
+    background-color: #3b82f6; /* Blue */
+    color: white;
+  }
+
+  .bg-primary-dark {
+    background-color: #2563eb;
+  }
+
+  .text-primary {
+    color: #3b82f6;
+  }
+
+  .text-error {
+    color: #dc2626;
+  }
+
+  .text-success {
+    color: #16a34a;
+  }
+
+  .p-4 {
+    padding: 16px;
+  }
+
+  .p-3 {
+    padding: 12px;
+  }
+
+  .text-sm {
+    font-size: 0.9rem;
+  }
+
+  .text-base {
+    font-size: 1rem;
+  }
+
+  .text-lg {
+    font-size: 1.125rem;
+  }
+
+  .rounded-full {
+    border-radius: 9999px;
+  }
+
+  .w-12 {
+    width: 48px;
+  }
+
+  .h-12 {
+    height: 48px;
+  }
+
+  .w-6 {
+    width: 24px;
+  }
+
+  .h-6 {
+    height: 24px;
+  }
+
+  .text-center {
+    text-align: center;
+  }
+
+  /* Scrollable panel */
+  .scrollable {
+    max-height: 300px;
+    overflow-y: auto;
+  }
+
+  /* Sidebar styles */
+  #sidebar {
+    width: 280px;
+    background-color: #222831;
+    color: white;
+    height: 100vh;
+    position: fixed;
+    top: 0; left: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+  }
+
+  #sidebar .nav-link {
+    padding: 10px 16px;
+    color: #eeeeee;
+    margin-bottom: 12px;
+    border-radius: 8px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+  }
+
+  #sidebar .nav-link:hover, #sidebar .nav-link.active {
+    background-color: #3b82f6;
+    color: white;
+  }
+
+  /* Main content area */
+  #mainDashboard {
+    margin-left: 300px;
+    padding: 24px;
+    min-height: 100vh;
+    background-color: #ffffff;
+  }
+
+  /* Panels */
+  .panel {
+    display: none;
+    margin-top: 20px;
+  }
+
+  .panel.active {
+    display: block;
+  }
+
+  /* Table styling */
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 12px;
+  }
+
+  th, td {
+    border: 1.5px solid #ddd;
+    padding: 12px 10px;
+    font-size: 1rem;
+    text-align: left;
+  }
+
+  th {
+    background-color: #3b82f6;
+    color: white;
+  }
+
+  /* Status pill */
+  .status-pill {
+    padding: 6px 12px;
+    border-radius: 9999px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: white;
+  }
+
+  .status-available {
+    background-color: #16a34a;
+  }
+
+  .status-occupied {
+    background-color: #dc2626;
+  }
+
+  .status-maintenance {
+    background-color: #fbbf24;
+    color: #222831;
+  }
+
+  /* Alerts */
+  .alert {
+    padding: 12px 20px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    font-weight: 600;
+  }
+
+  .alert-error {
+    background-color: #fee2e2;
+    color: #b91c1c;
+  }
+
+  .alert-success {
+    background-color: #dcfce7;
+    color: #166534;
+  }
+
+  /* Scrollable logs */
+  #adminActivityLog, #managerReportPanel .report-content {
+    max-height: 300px;
+    overflow-y: scroll;
+    background: #f0f4f8;
+    padding: 12px;
+    border-radius: 8px;
+    font-family: monospace;
+    white-space: pre-wrap;
+  }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    #sidebar {
+      width: 100%;
+      height: auto;
+      position: relative;
+      flex-direction: row;
+      overflow-x: auto;
+      padding: 12px;
+    }
+    #mainDashboard {
+      margin-left: 0;
+      padding: 12px;
+    }
+  }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800 dark:bg-gray-800 dark:text-gray-200">
@@ -1341,4 +1623,5 @@
     </script>
 </body>
 </html>
+
 
