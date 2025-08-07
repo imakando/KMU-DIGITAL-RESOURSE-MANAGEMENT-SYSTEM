@@ -1,1674 +1,814 @@
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Computer Lab Management System</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <title>Admin & Supervisor System (Terminal Style)</title>
+    <!-- Lucide Icons CDN for avatars and UI icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        
-  /* --- UPDATED COLOR SCHEME & FONT --- */
-  body {
-    background-color: GREEN;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: #222831;
-    margin: 0;
-    font-size: 16px;
-  }
+        @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap');
+        body {
+            font-family: 'Roboto Mono', monospace;
+            background-color: #1a1a1a;
+            color: #00ff00;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 2rem;
+            box-sizing: border-box;
+        }
+        .container {
+            width: 100%;
+            max-width: 1200px;
+        }
+        .system-panel {
+            background-color: #000000;
+            border: 2px solid #00ff00;
+            box-shadow: 0 0 10px #00ff00;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            animation: terminalGlow 2s infinite alternate;
+        }
+        @keyframes terminalGlow {
+            from { box-shadow: 0 0 5px #00ff00; }
+            to { box-shadow: 0 0 15px #00ff00; }
+        }
+        .login-card {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        input, select, textarea {
+            background-color: #0d0d0d;
+            border: 1px solid #00ff00;
+            color: #00ff00;
+            padding: 0.75rem;
+            width: 100%;
+            margin-top: 0.5rem;
+            margin-bottom: 1rem;
+            box-shadow: inset 0 0 5px #00ff0080;
+        }
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            box-shadow: 0 0 10px #00ff00;
+        }
+        button {
+            background-color: #00aaff;
+            color: #000000;
+            font-weight: bold;
+            padding: 0.75rem 1.5rem;
+            border: 2px solid #00aaff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        button.btn-primary { background-color: #00aaff; border-color: #00aaff; }
+        button.btn-danger { background-color: #ff3333; border-color: #ff3333; }
+        button.btn-warning { background-color: #ffff33; border-color: #ffff33; }
+        button.btn-success { background-color: #00cc00; border-color: #00cc00; }
 
-  /* Dark mode toggle can be added later, default light for now */
-  .dark {
-    background-color: #121212;
-    color: #eee;
-  }
+        button:hover {
+            filter: brightness(1.2);
+            box-shadow: 0 0 10px;
+        }
+        .text-neon-blue { color: #00aaff; }
+        .text-neon-green { color: #00ff00; }
+        .text-neon-red { color: #ff3333; }
+        .text-neon-yellow { color: #ffff33; }
 
-  h1, h2, h3, h4, h5 {
-    font-weight: 700;
-    color: #30475e;
-  }
-
-  button {
-    cursor: pointer;
-    font-size: 1rem;
-    font-weight: 600;
-    border-radius: 6px;
-    border: none;
-    padding: 10px 16px;
-    transition: background-color 0.3s ease;
-  }
-
-  button:hover {
-    filter: brightness(0.9);
-  }
-
-  input[type=text], input[type=password], select {
-    font-size: 1rem;
-    padding: 10px;
-    border-radius: 6px;
-    border: 1.8px solid #cbd5e1;
-    width: 100%;
-    box-sizing: border-box;
-  }
-
-  input[type=text]:focus, input[type=password]:focus, select:focus {
-    outline: none;
-    border-color: #3b82f6;
-    box-shadow: 0 0 5px #3b82f6;
-  }
-
-  label {
-    font-weight: 400;
-    display: block;
-    margin-bottom: 6px;
-  }
-
-  .container {
-    max-width: 500px;
-    margin: 20px auto;
-    padding: 0 20px;
-  }
-
-  .flex {
-    display: flex;
-  }
-
-  .flex-column {
-    flex-direction: column;
-  }
-
-  .items-center {
-    align-items: center;
-  }
-
-  .justify-between {
-    justify-content: space-between;
-  }
-
-  .gap-2 {
-    gap: 16px;
-  }
-
-  .mb-2 {
-    margin-bottom: 16px;
-  }
-
-  .rounded-lg {
-    border-radius: 12px;
-  }
-
-  .shadow-md {
-    box-shadow: 0 4px 8px rgb(0 0 0 / 0.1);
-  }
-
-  .bg-white {
-    background-color: #ffffff;
-  }
-
-  .bg-primary {
-    background-color: #3b82f6; /* Blue */
-    color: white;
-  }
-
-  .bg-primary-dark {
-    background-color: #2563eb;
-  }
-
-  .text-primary {
-    color: #3b82f6;
-  }
-
-  .text-error {
-    color: #dc2626;
-  }
-
-  .text-success {
-    color: #16a34a;
-  }
-
-  .p-4 {
-    padding: 16px;
-  }
-
-  .p-3 {
-    padding: 12px;
-  }
-
-  .text-sm {
-    font-size: 0.9rem;
-  }
-
-  .text-base {
-    font-size: 1rem;
-  }
-
-  .text-lg {
-    font-size: 1.125rem;
-  }
-
-  .rounded-full {
-    border-radius: 9999px;
-  }
-
-  .w-12 {
-    width: 48px;
-  }
-
-  .h-12 {
-    height: 48px;
-  }
-
-  .w-6 {
-    width: 24px;
-  }
-
-  .h-6 {
-    height: 24px;
-  }
-
-  .text-center {
-    text-align: center;
-  }
-
-  /* Scrollable panel */
-  .scrollable {
-    max-height: 300px;
-    overflow-y: auto;
-  }
-
-  /* Sidebar styles */
-  #sidebar {
-    width: 280px;
-    background-color: #222831;
-    color: white;
-    height: 100vh;
-    position: fixed;
-    top: 0; left: 0;
-    display: flex;
-    flex-direction: column;
-    padding: 24px;
-  }
-
-  #sidebar .nav-link {
-    padding: 10px 16px;
-    color: #eeeeee;
-    margin-bottom: 12px;
-    border-radius: 8px;
-    font-weight: 600;
-    text-decoration: none;
-    transition: background-color 0.2s ease;
-  }
-
-  #sidebar .nav-link:hover, #sidebar .nav-link.active {
-    background-color: #3b82f6;
-    color: white;
-  }
-
-  /* Main content area */
-  #mainDashboard {
-    margin-left: 300px;
-    padding: 24px;
-    min-height: 100vh;
-    background-color: #ffffff;
-  }
-
-  /* Panels */
-  .panel {
-    display: none;
-    margin-top: 20px;
-  }
-
-  .panel.active {
-    display: block;
-  }
-
-  /* Table styling */
-  table {
-    border-collapse: collapse;
-    width: 100%;
-    margin-top: 12px;
-  }
-
-  th, td {
-    border: 1.5px solid #ddd;
-    padding: 12px 10px;
-    font-size: 1rem;
-    text-align: left;
-  }
-
-  th {
-    background-color: #3b82f6;
-    color: white;
-  }
-
-  /* Status pill */
-  .status-pill {
-    padding: 6px 12px;
-    border-radius: 9999px;
-    font-weight: 700;
-    font-size: 0.85rem;
-    color: white;
-  }
-
-  .status-available {
-    background-color: #16a34a;
-  }
-
-  .status-occupied {
-    background-color: #dc2626;
-  }
-
-  .status-maintenance {
-    background-color: #fbbf24;
-    color: #222831;
-  }
-
-  /* Alerts */
-  .alert {
-    padding: 12px 20px;
-    border-radius: 8px;
-    margin-bottom: 16px;
-    font-weight: 600;
-  }
-
-  .alert-error {
-    background-color: #fee2e2;
-    color: #b91c1c;
-  }
-
-  .alert-success {
-    background-color: #dcfce7;
-    color: #166534;
-  }
-
-  /* Scrollable logs */
-  #adminActivityLog, #managerReportPanel .report-content {
-    max-height: 300px;
-    overflow-y: scroll;
-    background: #f0f4f8;
-    padding: 12px;
-    border-radius: 8px;
-    font-family: monospace;
-    white-space: pre-wrap;
-  }
-
-  /* Responsive */
-  @media (max-width: 900px) {
-    #sidebar {
-      width: 100%;
-      height: auto;
-      position: relative;
-      flex-direction: row;
-      overflow-x: auto;
-      padding: 12px;
-    }
-    #mainDashboard {
-      margin-left: 0;
-      padding: 12px;
-    }
-  }
+        .flex-container {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+        .flex-container > div {
+            flex: 1;
+            min-width: 400px;
+        }
+        .grid-container {
+            display: grid;
+            gap: 1rem;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        }
+        .station-card {
+            border: 1px dashed #00ff00;
+            padding: 1rem;
+            text-align: center;
+        }
+        .station-card.occupied {
+            border-color: #ff3333;
+            background-color: rgba(255, 51, 51, 0.1);
+        }
+        .station-card.unoccupied {
+            border-color: #00cc00;
+            background-color: rgba(0, 204, 0, 0.1);
+        }
+        .station-card.has-issue {
+            border-color: #ffff33;
+            background-color: rgba(255, 255, 51, 0.1);
+        }
+        .chat-container {
+            height: 300px;
+            overflow-y: auto;
+            border: 1px solid #00ff00;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .chat-message {
+            max-width: 75%;
+            padding: 0.5rem;
+            border: 1px solid;
+        }
+        .chat-message.admin {
+            align-self: flex-end;
+            background-color: rgba(0, 170, 255, 0.2);
+            border-color: #00aaff;
+        }
+        .chat-message.supervisor {
+            align-self: flex-start;
+            background-color: rgba(0, 204, 0, 0.2);
+            border-color: #00cc00;
+        }
+        .message-box {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #000;
+            border: 2px solid #00ff00;
+            box-shadow: 0 0 10px #00ff00;
+            padding: 2rem;
+            z-index: 1000;
+            color: #00ff00;
+            display: none;
+        }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800 dark:bg-gray-800 dark:text-gray-200">
-    <div class="flex h-screen">
-        <aside id="sidebar" class="w-64 bg-white dark:bg-gray-900 shadow-lg p-6 flex flex-col justify-between hidden">
-            <div>
-                <div class="text-2xl font-bold text-center text-blue-600 dark:text-blue-400 mb-6">Lab Management</div>
-                <nav id="sidebar-nav">
-                    <ul id="managerNav" class="space-y-2 hidden">
-                        <li>
-                            <a href="#" class="nav-link flex items-center p-3 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200" onclick="showPanel('managerReportPanel')">
-                                <i class="fas fa-chart-line mr-3"></i> Reports
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" class="nav-link flex items-center p-3 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200" onclick="showPanel('allActivityLogPanel')">
-                                <i class="fas fa-history mr-3"></i> Activity Log
-                            </a>
-                        </li>
-                    </ul>
-                    <ul id="adminNav" class="space-y-2 hidden">
-                        <li>
-                            <a href="#" class="nav-link flex items-center p-3 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200" onclick="showPanel('registrationPanel')">
-                                <i class="fas fa-user-plus mr-3"></i> User Registration
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" class="nav-link flex items-center p-3 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200" onclick="showPanel('computerManagementPanel')">
-                                <i class="fas fa-desktop mr-3"></i> Computer Management
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" class="nav-link flex items-center p-3 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200" onclick="showPanel('issueManagementPanel')">
-                                <i class="fas fa-exclamation-triangle mr-3"></i> Issues
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" class="nav-link flex items-center p-3 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200" onclick="showPanel('supervisorManagementPanel')">
-                                <i class="fas fa-user-shield mr-3"></i> Supervisors
-                            </a>
-                        </li>
-                    </ul>
-                    <ul id="supervisorNav" class="space-y-2 hidden">
-                        <li>
-                            <a href="#" class="nav-link flex items-center p-3 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200" onclick="showPanel('supervisorStatusPanel')">
-                                <i class="fas fa-check-circle mr-3"></i> Lab Status
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" class="nav-link flex items-center p-3 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200" onclick="showPanel('assignPanel')">
-                                <i class="fas fa-user-clock mr-3"></i> Assign PC
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" class="nav-link flex items-center p-3 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200" onclick="showPanel('occupiedListPanel')">
-                                <i class="fas fa-list-ul mr-3"></i> Occupied List
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" class="nav-link flex items-center p-3 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200" onclick="showPanel('reportIssuePanel')">
-                                <i class="fas fa-exclamation-circle mr-3"></i> Report Issue
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" class="nav-link flex items-center p-3 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200" onclick="showPanel('changePasswordPanel')">
-                                <i class="fas fa-key mr-3"></i> Change Password
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
-            <div class="mt-8">
-                <button id="logoutButton" class="w-full flex items-center justify-center p-3 text-red-500 bg-red-100 rounded-lg hover:bg-red-200 dark:bg-red-800 dark:hover:bg-red-700 dark:text-red-200 transition-colors duration-200">
-                    <i class="fas fa-sign-out-alt mr-2"></i> Logout
-                </button>
-                <button id="darkModeToggle" class="w-full flex items-center justify-center p-3 mt-4 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-300 transition-colors duration-200">
-                    <i class="fas fa-moon mr-2"></i> Toggle Dark Mode
-                </button>
-            </div>
-        </aside>
+<body>
+    <!-- Main Container -->
+    <div class="container">
 
-        <main class="flex-1 flex flex-col overflow-hidden">
-            <header class="bg-white dark:bg-gray-900 shadow-md p-4 flex justify-between items-center z-10">
-                <div class="flex items-center space-x-4">
-                    <button id="menuToggle" class="text-gray-600 dark:text-gray-300 md:hidden">
-                        <i class="fas fa-bars text-xl"></i>
-                    </button>
-                    <h1 class="text-xl font-semibold text-gray-800 dark:text-gray-200">Dashboard</h1>
+        <!-- Login Screen -->
+        <div id="login-screen" class="system-panel login-card">
+            <h1 class="text-neon-green text-3xl font-bold mb-4 text-center">ACCESS TERMINAL</h1>
+            <div class="flex flex-col items-center mb-6">
+                 <div class="p-4 rounded-full mb-2 border-2 border-dashed border-neon-green">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#00ff00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-terminal-square"><path d="m7 11 2 2 4-4"/><rect width="18" height="18" x="3" y="3" rx="2"/></svg>
                 </div>
-                <div class="flex items-center space-x-4">
-                    <div id="adminMessagePanel" class="bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 p-2 rounded-lg text-sm hidden">
-                        <i class="fas fa-info-circle mr-2"></i>Admin messages will appear here.
+            </div>
+            <div class="flex justify-center mb-8">
+                <button id="show-admin-login-btn" class="btn-primary w-1/2">ADMIN</button>
+                <button id="show-supervisor-login-btn" class="btn-success w-1/2">SUPERVISOR</button>
+            </div>
+
+            <!-- Admin Login Form -->
+            <form id="admin-login-form">
+                <h2 class="text-neon-blue text-center mb-4">ADMIN LOGIN</h2>
+                <input type="text" id="admin-username" placeholder="Username" required>
+                <input type="password" id="admin-password" placeholder="Password" required>
+                <input type="password" id="admin-secret-code" placeholder="Secret Code" required>
+                <button type="submit" class="btn-primary w-full">LOG IN</button>
+                <p id="admin-login-message" class="text-center text-neon-red mt-2"></p>
+            </form>
+
+            <!-- Supervisor Login Form -->
+            <form id="supervisor-login-form" style="display:none;">
+                <h2 class="text-neon-green text-center mb-4">SUPERVISOR LOGIN</h2>
+                <input type="text" id="supervisor-id" placeholder="ID" required>
+                <input type="password" id="supervisor-password" placeholder="Password" required>
+                <button type="submit" class="btn-success w-full">LOG IN</button>
+                <button type="button" id="forgot-password-btn" class="btn-warning w-full mt-2">FORGOT PASSWORD?</button>
+                <p id="supervisor-login-message" class="text-center text-neon-red mt-2"></p>
+            </form>
+        </div>
+
+        <!-- Admin Dashboard Screen -->
+        <div id="admin-dashboard" style="display:none;">
+            <div class="system-panel">
+                <div class="flex-container">
+                    <h1 class="text-neon-blue text-3xl font-bold">ADMIN DASHBOARD</h1>
+                    <button id="admin-logout-btn" class="btn-danger">LOGOUT</button>
+                </div>
+                <div class="flex-container mt-4">
+                    <!-- Registration Forms -->
+                    <div class="system-panel">
+                        <h2 class="text-neon-blue text-2xl font-bold mb-4">REGISTER STUDENT</h2>
+                        <form id="student-register-form">
+                            <input type="text" id="student-name" placeholder="Student Name" required>
+                            <input type="text" id="student-id" placeholder="Student ID" required>
+                            <input type="text" id="student-hostel" placeholder="Hostel.Room" required>
+                            <input type="text" id="student-program" placeholder="Program of Study" required>
+                            <input type="number" id="student-year" placeholder="Year of Study" required>
+                            <label class="text-neon-green">PHOTO UPLOAD</label>
+                            <input type="file" id="student-photo">
+                            <button type="submit" class="btn-primary w-full mt-4">REGISTER</button>
+                            <p id="student-register-message" class="text-center mt-2"></p>
+                        </form>
                     </div>
-                    <div id="supervisorOnDutyPanel" class="hidden">
-                        <div id="noSupervisorMessage" class="flex items-center p-2 rounded-md bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-sm">
-                            <i class="fas fa-user-times mr-2"></i> No supervisor on duty
-                        </div>
-                        <div id="supervisorOnDutyInfo" class="items-center p-2 rounded-md bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 text-sm hidden">
-                            <div class="flex items-center">
-                                <img id="onDutyProfilePic" src="" alt="Supervisor" class="w-8 h-8 rounded-full mr-2">
-                                <div>
-                                    <p class="font-bold">On Duty: <span id="onDutyNameSpan"></span></p>
-                                    <p class="text-xs">ID: <span id="onDutyIdSpan"></span></p>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="system-panel">
+                        <h2 class="text-neon-blue text-2xl font-bold mb-4">REGISTER SUPERVISOR</h2>
+                        <form id="supervisor-register-form">
+                            <input type="text" id="supervisor-name" placeholder="Supervisor Name" required>
+                            <input type="text" id="supervisor-reg-id" placeholder="ID" required>
+                            <input type="email" id="supervisor-email" placeholder="Email" required>
+                            <input type="password" id="supervisor-reg-password" placeholder="Password" required>
+                            <label class="text-neon-green">PHOTO UPLOAD</label>
+                            <input type="file" id="supervisor-photo">
+                            <button type="submit" class="btn-primary w-full mt-4">REGISTER</button>
+                            <p id="supervisor-register-message" class="text-center mt-2"></p>
+                        </form>
                     </div>
-                    <div class="flex items-center space-x-2">
-                        <img id="headerAvatar" src="https://placehold.co/32x32/A0AEC0/FFFFFF?text=S" alt="User Avatar" class="w-8 h-8 rounded-full">
-                        <div>
-                            <p id="headerUser" class="text-sm font-medium"></p>
-                            <p id="headerRole" class="text-xs text-gray-500 dark:text-gray-400"></p>
+                </div>
+                
+                <!-- Supervisor Management & Reports -->
+                <div class="system-panel mt-4">
+                    <h2 class="text-neon-blue text-2xl font-bold mb-4">SUPERVISOR MANAGEMENT</h2>
+                    <div id="supervisor-list" class="grid-container"></div>
+                </div>
+
+                <div class="system-panel mt-4">
+                    <h2 class="text-neon-blue text-2xl font-bold mb-4">SYSTEM ACTIVITIES & REPORTS</h2>
+                    <div class="flex-container">
+                        <div class="system-panel">
+                            <h3 class="text-xl text-neon-green">ACTIVITY LOG</h3>
+                            <ul id="activity-log" style="height: 150px; overflow-y: auto;"></ul>
+                        </div>
+                        <div class="system-panel">
+                            <h3 class="text-xl text-neon-green">REPORT SUMMARY</h3>
+                            <p>TOTAL SUPERVISORS: <span id="report-supervisors">0</span></p>
+                            <p>TOTAL STUDENTS: <span id="report-students">0</span></p>
+                            <p>TOTAL STATIONS: <span id="report-total-stations">0</span></p>
+                            <p>OCCUPIED STATIONS: <span id="report-occupied-stations">0</span></p>
+                            <p>UNOCCUPIED STATIONS: <span id="report-unoccupied-stations">0</span></p>
+                            <button onclick="generateReport()" class="btn-success mt-2">GENERATE REPORT</button>
                         </div>
                     </div>
                 </div>
-            </header>
-
-            <div id="loginSelectionPanel" class="flex-1 flex flex-col justify-center items-center p-8 bg-gray-100 dark:bg-gray-800 transition-all duration-300">
-                <div class="w-full max-w-2xl bg-white dark:bg-gray-900 p-8 rounded-xl shadow-2xl text-center">
-                    <h2 class="text-3xl font-extrabold text-gray-900 dark:text-gray-100 mb-6">Welcome to the Lab Management System</h2>
-                    <p class="text-lg text-gray-600 dark:text-gray-400 mb-8">Please select your role to log in.</p>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <button id="managerButton" class="flex flex-col items-center justify-center p-8 bg-purple-100 text-purple-800 rounded-lg shadow-md hover:shadow-xl hover:bg-purple-200 transform hover:scale-105 transition-all duration-300">
-                            <i class="fas fa-user-tie text-5xl mb-3"></i>
-                            <span class="text-xl font-semibold">Manager</span>
-                        </button>
-                        <button id="adminButton" class="flex flex-col items-center justify-center p-8 bg-blue-100 text-blue-800 rounded-lg shadow-md hover:shadow-xl hover:bg-blue-200 transform hover:scale-105 transition-all duration-300">
-                            <i class="fas fa-user-cog text-5xl mb-3"></i>
-                            <span class="text-xl font-semibold">Admin</span>
-                        </button>
-                        <button id="supervisorButton" class="flex flex-col items-center justify-center p-8 bg-green-100 text-green-800 rounded-lg shadow-md hover:shadow-xl hover:bg-green-200 transform hover:scale-105 transition-all duration-300">
-                            <i class="fas fa-user-shield text-5xl mb-3"></i>
-                            <span class="text-xl font-semibold">Supervisor</span>
-                        </button>
-                    </div>
+                
+                <!-- Station Status & Chat -->
+                <div class="system-panel mt-4">
+                    <h2 class="text-neon-blue text-2xl font-bold mb-4">STATION STATUS</h2>
+                    <div id="station-status-admin" class="grid-container"></div>
                 </div>
-            </div>
 
-            <div id="loginFormPanel" class="flex-1 flex flex-col justify-center items-center p-8 bg-gray-100 dark:bg-gray-800 hidden transition-all duration-300">
-                <div class="w-full max-w-lg bg-white dark:bg-gray-900 p-8 rounded-xl shadow-2xl">
-                    <button id="backButton" class="mb-4 text-gray-600 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-400 transition-colors">
-                        <i class="fas fa-arrow-left mr-2"></i> Back
-                    </button>
-                    <h2 class="text-3xl font-extrabold text-gray-900 dark:text-gray-100 mb-6 text-center">Log In</h2>
-                    <form id="loginForm" class="space-y-6">
-                        <input type="hidden" id="roleInput" name="role">
-                        <div>
-                            <label for="usernameInput" class="form-label block text-gray-700 dark:text-gray-300">Username</label>
-                            <input type="text" id="usernameInput" name="username" required class="mt-1 block w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-gray-200">
-                        </div>
-                        <div>
-                            <label for="passwordInput" class="form-label block text-gray-700 dark:text-gray-300">Password</label>
-                            <input type="password" id="passwordInput" name="password" required class="mt-1 block w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-gray-200">
-                        </div>
-                        <div id="secretCodeContainer" class="hidden">
-                            <label for="secretCodeInput" class="form-label block text-gray-700 dark:text-gray-300">Secret Code</label>
-                            <input type="password" id="secretCodeInput" name="secretCode" class="mt-1 block w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-gray-200">
-                        </div>
-                        <div id="loginMessage" class="text-sm p-3 rounded-md hidden"></div>
-                        <button type="submit" class="w-full py-3 px-4 bg-blue-600 text-white font-semibold rounded-md shadow-lg hover:bg-blue-700 transition-colors">Log In</button>
+                <div class="system-panel mt-4">
+                    <h2 class="text-neon-blue text-2xl font-bold mb-4">CHAT WITH SUPERVISORS</h2>
+                    <div id="admin-chat-box" class="chat-container"></div>
+                    <form id="admin-chat-form" style="display:flex; gap: 1rem; margin-top: 1rem;">
+                        <input type="text" id="admin-chat-input" placeholder="> TYPE MESSAGE..." style="flex-grow: 1;" required>
+                        <button type="submit" class="btn-primary">SEND</button>
                     </form>
                 </div>
             </div>
+        </div>
 
-            <div id="mainDashboard" class="flex-1 overflow-y-auto p-6 hidden">
-                <div id="supervisorDashboard" class="space-y-6 hidden">
-                    <div id="admin-view-switcher" class="flex justify-end items-center gap-4 hidden">
-                        <span class="text-sm text-gray-500 dark:text-gray-400">Admin is viewing Supervisor Panel</span>
-                        <button id="backToAdminButton" class="py-2 px-4 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors duration-200">Back to Admin Panel</button>
-                    </div>
-
-                    <div id="supervisorStatusPanel" class="panel hidden bg-white dark:bg-gray-900 p-6 rounded-xl shadow-md">
-                        <h3 class="text-2xl font-bold mb-4">Lab Status</h3>
-                        <div id="labStatusGrid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4"></div>
-                    </div>
-                    <div id="assignPanel" class="panel hidden bg-white dark:bg-gray-900 p-6 rounded-xl shadow-md">
-                        <h3 class="text-2xl font-bold mb-4">Assign Computer to Student</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <label for="studentSearchInput" class="form-label block text-gray-700 dark:text-gray-300">Student ID</label>
-                                <div class="mt-1 flex gap-2">
-                                    <input type="text" id="studentSearchInput" class="block w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-gray-200" placeholder="e.g., U1234567A">
-                                    <button id="searchButton" class="bg-blue-600 text-white px-4 py-2 rounded-md shadow-md hover:bg-blue-700 transition-colors duration-200">Search</button>
-                                </div>
-                                <div id="searchMessage" class="mt-2 text-sm"></div>
-                                <div id="studentDetails" class="mt-4 p-4 bg-gray-100 dark:bg-gray-800 rounded-lg shadow-sm hidden">
-                                    <div class="flex items-center gap-4">
-                                        <img id="selectedStudentProfilePic" src="" alt="Student Profile" class="w-16 h-16 rounded-full object-cover">
-                                        <div>
-                                            <p class="font-bold text-lg" id="selectedStudentName"></p>
-                                            <p class="text-sm text-gray-600 dark:text-gray-400" id="selectedStudentId"></p>
-                                            <p class="text-sm text-gray-600 dark:text-gray-400"><span id="selectedStudentHostel"></span>, Room: <span id="selectedStudentRoom"></span></p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div>
-                                <label for="computerSelect" class="form-label block text-gray-700 dark:text-gray-300">Select Computer</label>
-                                <select id="computerSelect" class="mt-1 block w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm dark:bg-gray-800 dark:text-gray-200"></select>
-                                <button id="assignButton" class="mt-4 w-full py-2 px-4 bg-green-600 text-white rounded-md shadow-md hover:bg-green-700 transition-colors duration-200">Assign Computer</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div id="occupiedListPanel" class="panel hidden bg-white dark:bg-gray-900 p-6 rounded-xl shadow-md">
-                        <h3 class="text-2xl font-bold mb-4">Occupied Computers</h3>
-                        <div id="occupiedList" class="space-y-3"></div>
-                    </div>
-                    <div id="reportIssuePanel" class="panel hidden bg-white dark:bg-gray-900 p-6 rounded-xl shadow-md">
-                        <h3 class="text-2xl font-bold mb-4">Report an Issue</h3>
-                        <form id="issueReportForm" class="space-y-4">
-                            <div>
-                                <label for="issueComputerSelect" class="form-label block text-gray-700 dark:text-gray-300">Select Computer</label>
-                                <select id="issueComputerSelect" class="mt-1 block w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm dark:bg-gray-800 dark:text-gray-200"></select>
-                            </div>
-                            <div>
-                                <label for="issueDescriptionInput" class="form-label block text-gray-700 dark:text-gray-300">Description</label>
-                                <textarea id="issueDescriptionInput" rows="3" class="mt-1 block w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm dark:bg-gray-800 dark:text-gray-200" placeholder="e.g., Computer is not turning on."></textarea>
-                            </div>
-                            <div id="issueReportMessage" class="text-sm p-3 rounded-md hidden"></div>
-                            <button type="submit" class="w-full py-2 px-4 bg-red-600 text-white rounded-md shadow-md hover:bg-red-700 transition-colors duration-200">Report Issue</button>
-                        </form>
-                    </div>
-                    <div id="changePasswordPanel" class="panel hidden bg-white dark:bg-gray-900 p-6 rounded-xl shadow-md">
-                        <h3 class="text-2xl font-bold mb-4">Change Password</h3>
-                        <form id="changePasswordForm" class="space-y-4">
-                            <div>
-                                <label for="supIdChangeInput" class="form-label block text-gray-700 dark:text-gray-300">Supervisor ID</label>
-                                <input type="text" id="supIdChangeInput" required class="mt-1 block w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm dark:bg-gray-800 dark:text-gray-200">
-                            </div>
-                            <div>
-                                <label for="oldPasswordInput" class="form-label block text-gray-700 dark:text-gray-300">Old Password</label>
-                                <input type="password" id="oldPasswordInput" required class="mt-1 block w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm dark:bg-gray-800 dark:text-gray-200">
-                            </div>
-                            <div>
-                                <label for="newPasswordInput" class="form-label block text-gray-700 dark:text-gray-300">New Password</label>
-                                <input type="password" id="newPasswordInput" required class="mt-1 block w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm dark:bg-gray-800 dark:text-gray-200">
-                            </div>
-                            <div>
-                                <label for="confirmNewPasswordInput" class="form-label block text-gray-700 dark:text-gray-300">Confirm New Password</label>
-                                <input type="password" id="confirmNewPasswordInput" required class="mt-1 block w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm dark:bg-gray-800 dark:text-gray-200">
-                            </div>
-                            <div id="passwordChangeMessage" class="text-sm p-3 rounded-md hidden"></div>
-                            <button type="submit" class="w-full py-2 px-4 bg-blue-600 text-white rounded-md shadow-md hover:bg-blue-700 transition-colors duration-200">Change Password</button>
-                        </form>
+        <!-- Supervisor Dashboard Screen -->
+        <div id="supervisor-dashboard" style="display:none;">
+            <div class="system-panel">
+                <div class="flex-container">
+                    <h1 class="text-neon-green text-3xl font-bold">SUPERVISOR DASHBOARD</h1>
+                    <div style="display:flex; gap: 1rem;">
+                        <button id="supervisor-change-password-btn" class="btn-primary">CHANGE PASSWORD</button>
+                        <button id="supervisor-logout-btn" class="btn-danger">LOGOUT</button>
                     </div>
                 </div>
-
-                <div id="adminDashboard" class="space-y-6 hidden">
-                    <div id="admin-view-switcher" class="flex justify-end items-center gap-4">
-                        <span class="text-sm text-gray-500 dark:text-gray-400">Currently viewing Admin Panel</span>
-                        <button id="viewSupervisorPanelButton" class="py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200">View Supervisor Panel</button>
+                
+                <div class="flex-container mt-4">
+                    <!-- Station Assignment -->
+                    <div class="system-panel">
+                        <h2 class="text-neon-green text-2xl font-bold mb-4">ASSIGN STATION</h2>
+                        <form id="station-assignment-form">
+                            <select id="station-select" required>
+                                <option value="">SELECT A STATION</option>
+                            </select>
+                            <input type="text" id="student-lookup-input" placeholder="ENTER STUDENT ID OR NAME" required>
+                            <p id="student-lookup-message" class="text-center text-neon-red mt-2"></p>
+                            <button type="submit" class="btn-success w-full mt-4">ASSIGN STATION</button>
+                        </form>
                     </div>
-
-                    <div id="registrationPanel" class="panel hidden bg-white dark:bg-gray-900 p-6 rounded-xl shadow-md">
-                        <h3 class="text-2xl font-bold mb-4">Student & Supervisor Registration</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div class="space-y-4">
-                                <h4 class="text-xl font-semibold">Register New Student</h4>
-                                <form id="registrationForm" class="space-y-3">
-                                    <div>
-                                        <label for="regNameInput" class="form-label block text-gray-700 dark:text-gray-300">Full Name</label>
-                                        <input type="text" id="regNameInput" required class="mt-1 block w-full border border-gray-300 rounded-md p-2 dark:bg-gray-800 dark:border-gray-600">
-                                    </div>
-                                    <div>
-                                        <label for="regIdInput" class="form-label block text-gray-700 dark:text-gray-300">Student ID</label>
-                                        <input type="text" id="regIdInput" required class="mt-1 block w-full border border-gray-300 rounded-md p-2 dark:bg-gray-800 dark:border-gray-600">
-                                    </div>
-                                    <div>
-                                        <label for="regHostelInput" class="form-label block text-gray-700 dark:text-gray-300">Hostel</label>
-                                        <input type="text" id="regHostelInput" required class="mt-1 block w-full border border-gray-300 rounded-md p-2 dark:bg-gray-800 dark:border-gray-600">
-                                    </div>
-                                    <div>
-                                        <label for="regRoomInput" class="form-label block text-gray-700 dark:text-gray-300">Room</label>
-                                        <input type="text" id="regRoomInput" required class="mt-1 block w-full border border-gray-300 rounded-md p-2 dark:bg-gray-800 dark:border-gray-600">
-                                    </div>
-                                    <div>
-                                        <label for="regProfilePicInput" class="form-label block text-gray-700 dark:text-gray-300">Upload Profile Picture</label>
-                                        <input type="file" id="regProfilePicInput" accept="image/*" class="mt-1 block w-full border border-gray-300 rounded-md p-2 dark:bg-gray-800 dark:border-gray-600">
-                                    </div>
-                                    <div id="registrationMessage" class="text-sm p-3 rounded-md hidden"></div>
-                                    <button type="submit" class="w-full py-2 px-4 bg-blue-600 text-white rounded-md shadow-md hover:bg-blue-700">Register Student</button>
-                                </form>
-                            </div>
-                            <div class="space-y-4">
-                                <h4 class="text-xl font-semibold">Register New Supervisor</h4>
-                                <form id="supervisorRegistrationForm" class="space-y-3">
-                                    <div>
-                                        <label for="supRegNameInput" class="form-label block text-gray-700 dark:text-gray-300">Full Name</label>
-                                        <input type="text" id="supRegNameInput" required class="mt-1 block w-full border border-gray-300 rounded-md p-2 dark:bg-gray-800 dark:border-gray-600">
-                                    </div>
-                                    <div>
-                                        <label for="supRegIdInput" class="form-label block text-gray-700 dark:text-gray-300">Supervisor ID</label>
-                                        <input type="text" id="supRegIdInput" required class="mt-1 block w-full border border-gray-300 rounded-md p-2 dark:bg-gray-800 dark:border-gray-600">
-                                    </div>
-                                    <div>
-                                        <label for="supRegUsernameInput" class="form-label block text-gray-700 dark:text-gray-300">Username</label>
-                                        <input type="text" id="supRegUsernameInput" required class="mt-1 block w-full border border-gray-300 rounded-md p-2 dark:bg-gray-800 dark:border-gray-600">
-                                    </div>
-                                    <div>
-                                        <label for="supRegPasswordInput" class="form-label block text-gray-700 dark:text-gray-300">Password</label>
-                                        <input type="password" id="supRegPasswordInput" required class="mt-1 block w-full border border-gray-300 rounded-md p-2 dark:bg-gray-800 dark:border-gray-600">
-                                    </div>
-                                    <div>
-                                        <label for="supRegEmailInput" class="form-label block text-gray-700 dark:text-gray-300">Email</label>
-                                        <input type="email" id="supRegEmailInput" required class="mt-1 block w-full border border-gray-300 rounded-md p-2 dark:bg-gray-800 dark:border-gray-600">
-                                    </div>
-                                    <div>
-                                        <label for="supRegProfilePicInput" class="form-label block text-gray-700 dark:text-gray-300">Upload Profile Picture</label>
-                                        <input type="file" id="supRegProfilePicInput" accept="image/*" class="mt-1 block w-full border border-gray-300 rounded-md p-2 dark:bg-gray-800 dark:border-gray-600">
-                                    </div>
-                                    <div id="supervisorRegistrationMessage" class="text-sm p-3 rounded-md hidden"></div>
-                                    <button type="submit" class="w-full py-2 px-4 bg-green-600 text-white rounded-md shadow-md hover:bg-green-700">Register Supervisor</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                    <div id="computerManagementPanel" class="panel hidden bg-white dark:bg-gray-900 p-6 rounded-xl shadow-md">
-                        <h3 class="text-2xl font-bold mb-4">Computer Management</h3>
-                        <div id="adminComputerList" class="space-y-3"></div>
-                        <div id="computerManagementMessage" class="mt-4 text-sm p-3 rounded-md hidden"></div>
-                    </div>
-                    <div id="issueManagementPanel" class="panel hidden bg-white dark:bg-gray-900 p-6 rounded-xl shadow-md">
-                        <h3 class="text-2xl font-bold mb-4">Reported Issues</h3>
-                        <div id="issueList" class="space-y-3"></div>
-                        <div id="issueMessage" class="mt-4 text-sm p-3 rounded-md hidden"></div>
-                    </div>
-                    <div id="supervisorManagementPanel" class="panel hidden bg-white dark:bg-gray-900 p-6 rounded-xl shadow-md">
-                        <h3 class="text-2xl font-bold mb-4">Supervisor Accounts</h3>
-                        <div id="supervisorList" class="space-y-3"></div>
+                    
+                    <!-- Station Status -->
+                    <div class="system-panel">
+                        <h2 class="text-neon-green text-2xl font-bold mb-4">STATION STATUS</h2>
+                        <div id="station-status-supervisor" class="grid-container"></div>
                     </div>
                 </div>
-
-                <div id="managerDashboard" class="space-y-6 hidden">
-                    <div id="managerReportPanel" class="panel hidden bg-white dark:bg-gray-900 p-6 rounded-xl shadow-md">
-                        <h3 class="text-2xl font-bold mb-4">User Reports</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <h4 class="text-xl font-semibold mb-2">Registered Students</h4>
-                                <div id="managerStudentList" class="space-y-3"></div>
-                            </div>
-                            <div>
-                                <h4 class="text-xl font-semibold mb-2">Registered Supervisors</h4>
-                                <div id="managerSupervisorList" class="space-y-3"></div>
-                            </div>
-                        </div>
+                
+                <!-- Report Issues & Chat -->
+                <div class="flex-container mt-4">
+                    <div class="system-panel">
+                        <h2 class="text-neon-green text-2xl font-bold mb-4">REPORT STATION ISSUES</h2>
+                        <form id="issue-report-form">
+                            <select id="issue-station-select" required>
+                                <option value="">SELECT STATION WITH ISSUE</option>
+                            </select>
+                            <textarea id="issue-description" placeholder="DESCRIBE THE ISSUE..." rows="4" required></textarea>
+                            <button type="submit" class="btn-warning w-full mt-4">REPORT ISSUE</button>
+                        </form>
                     </div>
-                    <div id="allActivityLogPanel" class="panel hidden bg-white dark:bg-gray-900 p-6 rounded-xl shadow-md">
-                        <h3 class="text-2xl font-bold mb-4">Activity Log</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                            <div class="bg-blue-100 dark:bg-blue-900 p-4 rounded-lg shadow-md">
-                                <p class="text-sm font-medium text-blue-800 dark:text-blue-200">Admin Activities</p>
-                                <p id="adminActivityCount" class="text-2xl font-bold text-blue-900 dark:text-blue-100"></p>
-                            </div>
-                            <div class="bg-green-100 dark:bg-green-900 p-4 rounded-lg shadow-md">
-                                <p class="text-sm font-medium text-green-800 dark:text-green-200">Supervisor Activities</p>
-                                <p id="supervisorActivityCount" class="text-2xl font-bold text-green-900 dark:text-green-100"></p>
-                            </div>
-                        </div>
-                        <div class="space-y-3"></div>
+                    <div class="system-panel">
+                        <h2 class="text-neon-green text-2xl font-bold mb-4">CHAT WITH ADMIN</h2>
+                        <div id="supervisor-chat-box" class="chat-container"></div>
+                        <form id="supervisor-chat-form" style="display:flex; gap: 1rem; margin-top: 1rem;">
+                            <input type="text" id="supervisor-chat-input" placeholder="> REPLY TO ADMIN..." style="flex-grow: 1;" required>
+                            <button type="submit" class="btn-success">REPLY</button>
+                        </form>
                     </div>
                 </div>
             </div>
-        </main>
+        </div>
+
+        <!-- Modals -->
+        <div id="password-reset-modal" class="message-box">
+            <h3 class="text-neon-yellow text-2xl mb-4">RESET PASSWORD</h3>
+            <form id="password-reset-form">
+                <input type="text" id="reset-name" placeholder="Name" required>
+                <input type="text" id="reset-id" placeholder="ID" required>
+                <input type="password" id="reset-old-password" placeholder="Current Password" required>
+                <input type="password" id="reset-new-password" placeholder="New Password" required>
+                <button type="submit" class="btn-warning w-full mt-4">RESET PASSWORD</button>
+                <button type="button" id="cancel-reset-btn" class="btn-danger w-full mt-2">CANCEL</button>
+                <p id="reset-message" class="text-center text-neon-red mt-2"></p>
+            </form>
+        </div>
+
+        <div id="password-change-modal" class="message-box">
+            <h3 class="text-neon-blue text-2xl mb-4">CHANGE PASSWORD</h3>
+            <form id="password-change-form">
+                <input type="password" id="current-password" placeholder="Current Password" required>
+                <input type="password" id="new-password" placeholder="New Password" required>
+                <button type="submit" class="btn-primary w-full mt-4">CHANGE PASSWORD</button>
+                <button type="button" id="cancel-change-btn" class="btn-danger w-full mt-2">CANCEL</button>
+                <p id="change-password-message" class="text-center text-neon-red mt-2"></p>
+            </form>
+        </div>
+        
     </div>
 
+    <!-- The JavaScript remains identical in functionality to the first version -->
     <script>
-        // Data storage, acting as a simple database
-        let appData = JSON.parse(localStorage.getItem('labData')) || {
-            users: [
-                { name: 'Jack Bauer', username: 'BAUER', password: '16342950', role: 'admin', profilePic: 'https://placehold.co/48x48/A0AEC0/FFFFFF?text=JB' },
-                { name: 'Dr. Given ', username: 'GIVEN', password: '200320@1', role: 'manager', profilePic: 'https://placehold.co/48x48/A0AEC0/FFFFFF?text=DG' },
-                { name: 'Kiprotich Ronald', supervisorId: 'SUP001', username: 'KIP', password: 'password', email: 'ronald.kip@email.com', role: 'supervisor', profilePic: 'https://placehold.co/48x48/A0AEC0/FFFFFF?text=KR', isBlocked: false },
-                { name: 'John Doe', studentId: 'U1234567A', hostel: 'Hostel A', room: '101', role: 'student', profilePic: 'https://placehold.co/48x48/A0AEC0/FFFFFF?text=JD' },
-                { name: 'Jane Smith', studentId: 'U7654321B', hostel: 'Hostel B', room: '205', role: 'student', profilePic: 'https://placehold.co/48x48/A0AEC0/FFFFFF?text=JS' },
-            ],
-            computers: [
-              { id: 1, available: true, onMaintenance: false, occupiedBy: null, studentId: null, studentProfilePic: null },
-              { id: 2, available: false, onMaintenance: false, occupiedBy:  null, studentId: null, studentProfilePic: null },
-                id: 3, available: true, onMaintenance: false, occupiedBy: null, studentId: null, studentProfilePic: null },
-              { id: 4, available: true, onMaintenance: false, occupiedBy: null, studentId: null, studentProfilePic: null },
-              { id: 5, available: true, onMaintenance: false, occupiedBy: null, studentId: null, studentProfilePic: null },
-              { id: 6, available: true, onMaintenance: false, occupiedBy: null, studentId: null, studentProfilePic: null },
-              { id: 7, available: true, onMaintenance: false, occupiedBy: null, studentId: null, studentProfilePic: null },
-              { id: 8, available: true, onMaintenance: false, occupiedBy: null, studentId: null, studentProfilePic: null },
-              { id: 9, available: true, onMaintenance: false, occupiedBy: null, studentId: null, studentProfilePic: null },
-              { id: 10, available: true, onMaintenance: false, occupiedBy: null, studentId: null, studentProfilePic: null },
-              { id: 11, available: true, onMaintenance: false, occupiedBy: null, studentId: null, studentProfilePic: null },
-              { id: 12, available: true, onMaintenance: false, occupiedBy: null, studentId: null, studentProfilePic: null },
-              { id: 13, available: true, onMaintenance: false, occupiedBy: null, studentId: null, studentProfilePic: null },
-              { id: 14, available: true, onMaintenance: false, occupiedBy: null, studentId: null, studentProfilePic: null },
-              { id: 15, available: true, onMaintenance: false, occupiedBy: null, studentId: null, studentProfilePic: null },
-              { id: 16, available: true, onMaintenance: false, occupiedBy: null, studentId: null, studentProfilePic: null },
-              { id: 17, available: true, onMaintenance: false, occupiedBy: null, studentId: null, studentProfilePic: null },
-              { id: 18, available: true, onMaintenance: false, occupiedBy: null, studentId: null, studentProfilePic: null },
-              { id: 19, available: true, onMaintenance: false, occupiedBy: null, studentId: null, studentProfilePic: null },
-              { id: 20, available: true, onMaintenance: false, occupiedBy: null, studentId: null, studentProfilePic: null },
-              { id: 21, available: true, onMaintenance: false, occupiedBy: null, studentId: null, studentProfilePic: null },
-              { id: 22, available: true, onMaintenance: false, occupiedBy: null, studentId: null, studentProfilePic: null },
-              { id: 23, available: true, onMaintenance: false, occupiedBy: null, studentId: null, studentProfilePic: null },
-              { id: 24, available: true, onMaintenance: false, occupiedBy: null, studentId: null, studentProfilePic: null },
-              { id: 25, available: true, onMaintenance: false, occupiedBy: null, studentId: null, studentProfilePic: null },
-              { id: 26, available: true, onMaintenance: false, occupiedBy: null, studentId: null, studentProfilePic: null },
-              { id: 27, available: true, onMaintenance: false, occupiedBy: null, studentId: null, studentProfilePic: null },
-              { id: 28, available: true, onMaintenance: false, occupiedBy: null, studentId: null, studentProfilePic: null },
-              { id: 29, available: true, onMaintenance: false, occupiedBy: null, studentId: null, studentProfilePic: null },
-              { id: 30, available: true, onMaintenance: false, occupiedBy: null, studentId: null, studentProfilePic: null },
-              { id: 31, available: true, onMaintenance: false, occupiedBy: null, studentId: null, studentProfilePic: null },
-              { id: 32, available: true, onMaintenance: false, occupiedBy: null, studentId: null, studentProfilePic: null },
-              { id: 33, available: true, onMaintenance: false, occupiedBy: null, studentId: null, studentProfilePic: null },
-              { id: 34, available: true, onMaintenance: false, occupiedBy: null, studentId: null, studentProfilePic: null },
-              { id: 35, available: true, onMaintenance: false, occupiedBy: null, studentId: null, studentProfilePic: null },
-              { id: 36, available: true, onMaintenance: false, occupiedBy: null, studentId: null, studentProfilePic: null },
-              { id: 37, available: true, onMaintenance: false, occupiedBy: null, studentId: null, studentProfilePic: null },
-              { id: 38, available: true, onMaintenance: false, occupiedBy: null, studentId: null, studentProfilePic: null },
-              { id: 39, available: true, onMaintenance: false, occupiedBy: null, studentId: null, studentProfilePic: null },
-              { id: 40, available: true, onMaintenance: false, occupiedBy: null, studentId: null, studentProfilePic: null },
-              { id: 41, available: true, onMaintenance: false, occupiedBy: null, studentId: null, studentProfilePic: null },
-              { id: 42, available: true, onMaintenance: false, occupiedBy: null, studentId: null, studentProfilePic: null },
-              { id: 43, available: true, onMaintenance: false, occupiedBy: null, studentId: null, studentProfilePic: null },
-              { id: 44, available: true, onMaintenance: false, occupiedBy: null, studentId: null, studentProfilePic: null },
-              { id: 45, available: true, onMaintenance: false, occupiedBy: null, studentId: null, studentProfilePic: null },
-              { id: 48, available: true, onMaintenance: false, occupiedBy: null, studentId: null, studentProfilePic: null },
-              { id: 47, available: true, onMaintenance: false, occupiedBy: null, studentId: null, studentProfilePic: null },
-              { id: 48, available: true, onMaintenance: false, occupiedBy: null, studentId: null, studentProfilePic: null },
-              { id: 49, available: true, onMaintenance: false, occupiedBy: null, studentId: null, studentProfilePic: null },
-              { id: 50, available: true, onMaintenance: false, occupiedBy: null, studentId: null, studentProfilePic: null },
-              { id: 51, available: true, onMaintenance: false, occupiedBy: null, studentId: null, studentProfilePic: null },
-              { id: 52, available: true, onMaintenance: false, occupiedBy: null, studentId: null, studentProfilePic: null },
-            ],
-            
-            issues: [
-                { id: 'issue_1', computerId: 2, description: 'Keyboard not working.', resolved: false, timestamp: Date.now() - 3600000 },
-                { id: 'issue_2', computerId: 5, description: 'Mouse is lagging.', resolved: true, timestamp: Date.now() - 7200000 },
-            ],
-            messages: [
-                { sender: 'Admin', text: 'Welcome to the lab! Please report any issues to the supervisor on duty.', timestamp: Date.now() - 10000000 },
-            ],
+        // --- Data Storage (In-memory Simulation) ---
+        let appData = {
+            students: [],
+            supervisors: [],
+            stations: [],
+            chatMessages: [],
             activities: [],
-            supervisorOnDuty: null,
-            sessions: []
+            currentUser: null
         };
 
-        // Global state variables
-        let loggedInUser = null;
-        let loggedInRole = null;
-        let currentAdminView = 'admin';
-
-        // --- CORE APPLICATION FUNCTIONS ---
-
-        // Save data to localStorage
-        function saveData(data) {
-            localStorage.setItem('labData', JSON.stringify(data));
-        }
-
-        // Display a message in a specific element
-        function showMessage(element, message, type) {
-            element.textContent = message;
-            element.className = `mt-2 text-sm p-3 rounded-md ${type === 'green' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`;
-            element.style.display = 'block';
-        }
-
-        // Hide a message
-        function hideMessage(element) {
-            element.style.display = 'none';
-        }
-
-        // Log user activity
-        function logActivity(description, data = {}) {
-            const newActivity = {
-                id: `activity_${Date.now()}`,
-                timestamp: Date.now(),
-                user: {
-                    id: loggedInUser.studentId || loggedInUser.supervisorId || loggedInUser.username,
-                    name: loggedInUser.name,
-                    role: loggedInRole
-                },
-                description,
-                data
-            };
-            appData.activities.push(newActivity);
-            saveData(appData);
-        }
-
-        // Function to toggle between different panels
-        function showPanel(panelId) {
-            document.querySelectorAll('.panel').forEach(panel => {
-                panel.style.display = 'none';
-            });
-            document.getElementById(panelId).style.display = 'block';
-        }
-
-        // --- RENDER FUNCTIONS FOR EACH DASHBOARD ---
-
-        // Renders the messages for all users
-        function renderMessages() {
-            const adminMessagePanel = document.getElementById('adminMessagePanel');
-            const latestMessage = appData.messages.slice(-1)[0];
-            if (latestMessage) {
-                adminMessagePanel.innerHTML = `<i class="fas fa-bullhorn mr-2"></i><strong>Admin Announcement:</strong> ${latestMessage.text}`;
-                adminMessagePanel.style.display = 'block';
-            } else {
-                adminMessagePanel.style.display = 'none';
-            }
-        }
-
-        // Renders the lab status grid for supervisors
-        function renderLabStatus() {
-            const labStatusGrid = document.getElementById('labStatusGrid');
-            labStatusGrid.innerHTML = '';
-            appData.computers.forEach(computer => {
-                const statusColor = computer.available ? 'bg-green-500' : computer.onMaintenance ? 'bg-yellow-500' : 'bg-red-500';
-                const statusText = computer.onMaintenance ? 'Maint.' : computer.available ? 'Available' : 'Occupied';
-                const computerDiv = document.createElement('div');
-                computerDiv.className = `p-4 rounded-lg shadow-md text-white text-center flex flex-col items-center justify-center transition-transform transform hover:scale-105 ${statusColor}`;
-                computerDiv.innerHTML = `
-                    <p class="font-bold">PC ${computer.id}</p>
-                    <p class="text-sm">${statusText}</p>
-                    ${computer.occupiedBy ? `<img src="${computer.studentProfilePic}" alt="User" class="w-8 h-8 rounded-full mt-2 border-2 border-white">` : ''}
-                `;
-                labStatusGrid.appendChild(computerDiv);
-            });
-        }
-
-        // Renders the list of occupied computers for supervisors
-        function renderOccupiedList() {
-            const occupiedList = document.getElementById('occupiedList');
-            occupiedList.innerHTML = '';
-            const occupiedComputers = appData.computers.filter(c => !c.available && !c.onMaintenance);
-
-            if (occupiedComputers.length === 0) {
-                occupiedList.innerHTML = '<p class="text-center text-gray-500 dark:text-gray-400">No computers are currently occupied.</p>';
-            } else {
-                occupiedComputers.forEach(c => {
-                    const listItem = document.createElement('div');
-                    listItem.className = 'flex justify-between items-center bg-gray-100 dark:bg-gray-700 p-4 rounded-lg shadow mb-2';
-                    listItem.innerHTML = `
-                        <div class="flex items-center gap-4">
-                            <img src="${c.studentProfilePic || 'https://placehold.co/48x48/A0AEC0/FFFFFF?text=S'}" alt="Student Profile" class="w-12 h-12 rounded-full object-cover">
-                            <div>
-                                <p class="font-bold text-gray-800 dark:text-gray-200">Computer ${c.id}</p>
-                                <p class="text-sm text-gray-600 dark:text-gray-400">Occupied by: ${c.occupiedBy}</p>
-                            </div>
-                        </div>
-                        <button class="bg-red-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-red-600 transition-colors duration-200" onclick="releaseComputer(${c.id})">Release</button>
-                    `;
-                    occupiedList.appendChild(listItem);
+        function initializeData() {
+            appData.admin = { username: 'admin', password: 'password', secretCode: '1234' };
+            for (let i = 1; i <= 100; i++) {
+                appData.stations.push({
+                    id: i,
+                    isOccupied: false,
+                    assignedTo: null,
+                    assignedBy: null,
+                    issue: null
                 });
             }
         }
+        
+        // --- UI Element References ---
+        const loginScreen = document.getElementById('login-screen');
+        const adminDashboard = document.getElementById('admin-dashboard');
+        const supervisorDashboard = document.getElementById('supervisor-dashboard');
+        
+        const adminLoginForm = document.getElementById('admin-login-form');
+        const supervisorLoginForm = document.getElementById('supervisor-login-form');
+        const showAdminLoginBtn = document.getElementById('show-admin-login-btn');
+        const showSupervisorLoginBtn = document.getElementById('show-supervisor-login-btn');
+        const adminLoginMessage = document.getElementById('admin-login-message');
+        const supervisorLoginMessage = document.getElementById('supervisor-login-message');
+        const passwordResetModal = document.getElementById('password-reset-modal');
+        const forgotPasswordBtn = document.getElementById('forgot-password-btn');
+        const passwordResetForm = document.getElementById('password-reset-form');
+        const cancelResetBtn = document.getElementById('cancel-reset-btn');
 
-        // Renders the dropdown for available computers
-        function renderComputerSelect() {
-            const computerSelect = document.getElementById('computerSelect');
-            computerSelect.innerHTML = '';
-            const availableComputers = appData.computers.filter(c => c.available && !c.onMaintenance);
-            if (availableComputers.length === 0) {
-                computerSelect.innerHTML = '<option disabled selected>No computers available</option>';
-                document.getElementById('assignButton').disabled = true;
+        const studentRegisterForm = document.getElementById('student-register-form');
+        const supervisorRegisterForm = document.getElementById('supervisor-register-form');
+        const studentRegisterMessage = document.getElementById('student-register-message');
+        const supervisorRegisterMessage = document.getElementById('supervisor-register-message');
+        const supervisorList = document.getElementById('supervisor-list');
+        const activityLog = document.getElementById('activity-log');
+        const stationStatusAdmin = document.getElementById('station-status-admin');
+        const adminChatBox = document.getElementById('admin-chat-box');
+        const adminChatForm = document.getElementById('admin-chat-form');
+
+        const stationAssignmentForm = document.getElementById('station-assignment-form');
+        const stationSelect = document.getElementById('station-select');
+        const studentLookupInput = document.getElementById('student-lookup-input');
+        const studentLookupMessage = document.getElementById('student-lookup-message');
+        const stationStatusSupervisor = document.getElementById('station-status-supervisor');
+        const issueReportForm = document.getElementById('issue-report-form');
+        const issueStationSelect = document.getElementById('issue-station-select');
+        const supervisorChatBox = document.getElementById('supervisor-chat-box');
+        const supervisorChatForm = document.getElementById('supervisor-chat-form');
+        const passwordChangeModal = document.getElementById('password-change-modal');
+        const supervisorChangePasswordBtn = document.getElementById('supervisor-change-password-btn');
+        const passwordChangeForm = document.getElementById('password-change-form');
+        const cancelChangeBtn = document.getElementById('cancel-change-btn');
+
+        // --- Authentication & Page Switching ---
+
+        function toggleLoginForms(formToShow) {
+            const adminLogin = document.getElementById('admin-login-form');
+            const supervisorLogin = document.getElementById('supervisor-login-form');
+            const adminBtn = document.getElementById('show-admin-login-btn');
+            const supervisorBtn = document.getElementById('show-supervisor-login-btn');
+            if (formToShow === 'admin') {
+                adminLogin.style.display = 'block';
+                supervisorLogin.style.display = 'none';
+                adminBtn.style.backgroundColor = '#00aaff';
+                supervisorBtn.style.backgroundColor = '#00cc00';
             } else {
-                document.getElementById('assignButton').disabled = false;
-                availableComputers.forEach(c => {
-                    const option = document.createElement('option');
-                    option.value = c.id;
-                    option.textContent = `Computer ${c.id}`;
-                    computerSelect.appendChild(option);
-                });
+                supervisorLogin.style.display = 'block';
+                adminLogin.style.display = 'none';
+                supervisorBtn.style.backgroundColor = '#00aaff';
+                adminBtn.style.backgroundColor = '#00cc00';
             }
         }
 
-        // Renders the dropdown for all computers for reporting issues
-        function renderIssueComputerSelect() {
-            const issueComputerSelect = document.getElementById('issueComputerSelect');
-            issueComputerSelect.innerHTML = '<option value="" disabled selected>Select a computer</option>';
-            appData.computers.forEach(c => {
-                const option = document.createElement('option');
-                option.value = c.id;
-                option.textContent = `Computer ${c.id}`;
-                issueComputerSelect.appendChild(option);
-            });
-        }
+        showAdminLoginBtn.addEventListener('click', () => toggleLoginForms('admin'));
+        showSupervisorLoginBtn.addEventListener('click', () => toggleLoginForms('supervisor'));
 
-        // Renders the session history
-        function renderSessionHistory() {
-            const historyList = document.getElementById('sessionHistoryList');
-            if (historyList) {
-                historyList.innerHTML = '';
-                appData.sessions.sort((a, b) => b.timestamp - a.timestamp).forEach(session => {
-                    const duration = session.duration ? `${(session.duration / 60).toFixed(2)} mins` : 'Active';
-                    const listItem = document.createElement('div');
-                    listItem.className = `flex justify-between items-center bg-gray-100 dark:bg-gray-700 p-4 rounded-lg shadow mb-2`;
-                    listItem.innerHTML = `
-                        <div>
-                            <p class="font-bold text-gray-800 dark:text-gray-200">Computer ${session.computerId}</p>
-                            <p class="text-sm text-gray-600 dark:text-gray-400">Student: ${session.student.name} (${session.student.studentId})</p>
-                            <p class="text-xs text-gray-500 dark:text-gray-400">Time: ${new Date(session.timestamp).toLocaleString()}</p>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-sm font-bold">${duration}</p>
-                            <p class="text-xs text-gray-500 dark:text-gray-400">Supervisor: ${session.supervisor.name}</p>
-                        </div>
-                    `;
-                    historyList.appendChild(listItem);
-                });
-            }
-        }
-
-        // NEW: Render function for the Manager panel
-        function renderManagerTools() {
-            const adminActivityCount = document.getElementById('adminActivityCount');
-            const supervisorActivityCount = document.getElementById('supervisorActivityCount');
-            const allActivityListContainer = document.getElementById('allActivityLogPanel').querySelector('div');
-
-            const adminActivities = appData.activities.filter(a => a.user.role === 'admin');
-            const supervisorActivities = appData.activities.filter(a => a.user.role === 'supervisor');
-
-            adminActivityCount.textContent = adminActivities.length;
-            supervisorActivityCount.textContent = supervisorActivities.length;
-
-            allActivityListContainer.innerHTML = '';
-            appData.activities.sort((a, b) => b.timestamp - a.timestamp).forEach(activity => {
-                const listItem = document.createElement('div');
-                let roleColor = activity.user.role === 'admin' ? 'bg-blue-500' : 'bg-green-500';
-                if (activity.user.role === 'system') {
-                    roleColor = 'bg-gray-500';
-                }
-
-                let detailsHtml = '';
-                if (activity.data && activity.data.student) {
-                    const student = activity.data.student;
-                    detailsHtml = `
-                        <div class="flex items-center gap-2 mt-2">
-                            <img src="${student.profilePic || 'https://placehold.co/24x24/A0AEC0/FFFFFF?text=S'}" alt="Student" class="w-6 h-6 rounded-full object-cover">
-                            <p class="text-sm text-gray-600 dark:text-gray-400">
-                                Student: ${student.name} (${student.studentId})
-                            </p>
-                        </div>
-                    `;
-                } else if (activity.data && activity.data.supervisor) {
-                    const supervisor = activity.data.supervisor;
-                    detailsHtml = `
-                        <div class="flex items-center gap-2 mt-2">
-                            <img src="${supervisor.profilePic || 'https://placehold.co/24x24/A0AEC0/FFFFFF?text=S'}" alt="Supervisor" class="w-6 h-6 rounded-full object-cover">
-                            <p class="text-sm text-gray-600 dark:text-gray-400">
-                                Supervisor: ${supervisor.name} (${supervisor.supervisorId})
-                            </p>
-                        </div>
-                    `;
-                }
-                listItem.className = `bg-gray-100 dark:bg-gray-700 p-3 rounded-lg shadow-md`;
-                listItem.innerHTML = `
-                    <p class="text-sm text-gray-500 dark:text-gray-400">${new Date(activity.timestamp).toLocaleString()}</p>
-                    <p class="mt-1">
-                        <span class="text-white px-2 py-1 rounded-full text-xs font-bold mr-2 ${roleColor}">${activity.user.role.toUpperCase()}</span>
-                        ${activity.description}
-                    </p>
-                    ${detailsHtml}
-                `;
-                allActivityListContainer.appendChild(listItem);
-            });
-        }
-
-        // NEW: Renders the detailed user reports for the manager
-        function renderUserReports() {
-            const managerStudentList = document.getElementById('managerStudentList');
-            const managerSupervisorList = document.getElementById('managerSupervisorList');
-
-            managerStudentList.innerHTML = '';
-            managerSupervisorList.innerHTML = '';
-
-            const students = appData.users.filter(u => u.role === 'student');
-            const supervisors = appData.users.filter(u => u.role === 'supervisor');
-
-            if (students.length === 0) {
-                managerStudentList.innerHTML = '<p class="text-center text-gray-500 dark:text-gray-400">No students are currently registered.</p>';
+        adminLoginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const username = e.target['admin-username'].value;
+            const password = e.target['admin-password'].value;
+            const secretCode = e.target['admin-secret-code'].value;
+            if (username === appData.admin.username && password === appData.admin.password && secretCode === appData.admin.secretCode) {
+                appData.currentUser = { role: 'admin' };
+                showScreen('admin-dashboard');
+                renderAdminDashboard();
+                logActivity('Admin logged in.');
             } else {
-                students.forEach(student => {
-                    const listItem = document.createElement('div');
-                    listItem.className = 'flex items-center gap-4 bg-gray-100 dark:bg-gray-700 p-4 rounded-lg shadow-md';
-                    listItem.innerHTML = `
-                        <img src="${student.profilePic || 'https://placehold.co/48x48/A0AEC0/FFFFFF?text=S'}" alt="Student Photo" class="w-12 h-12 rounded-full object-cover">
-                        <div class="flex-grow">
-                            <p class="font-bold text-gray-800 dark:text-gray-200">${student.name}</p>
-                            <p class="text-sm text-gray-600 dark:text-gray-400">ID: ${student.studentId}</p>
-                            <p class="text-sm text-gray-600 dark:text-gray-400">Hostel: ${student.hostel}, Room: ${student.room}</p>
-                        </div>
-                    `;
-                    managerStudentList.appendChild(listItem);
-                });
+                adminLoginMessage.textContent = 'INVALID CREDENTIALS.';
             }
+        });
 
-            if (supervisors.length === 0) {
-                managerSupervisorList.innerHTML = '<p class="text-center text-gray-500 dark:text-gray-400">No supervisors are currently registered.</p>';
+        supervisorLoginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const id = e.target['supervisor-id'].value;
+            const password = e.target['supervisor-password'].value;
+            const supervisor = appData.supervisors.find(sup => sup.id === id && sup.password === password);
+            if (supervisor && !supervisor.isBlocked) {
+                appData.currentUser = { role: 'supervisor', id: supervisor.id, name: supervisor.name };
+                showScreen('supervisor-dashboard');
+                renderSupervisorDashboard();
+                logActivity(`Supervisor ${supervisor.name} logged in.`);
+            } else if (supervisor && supervisor.isBlocked) {
+                supervisorLoginMessage.textContent = 'YOUR ACCOUNT HAS BEEN BLOCKED.';
             } else {
-                supervisors.forEach(supervisor => {
-                    const listItem = document.createElement('div');
-                    listItem.className = 'flex items-center gap-4 bg-gray-100 dark:bg-gray-700 p-4 rounded-lg shadow-md';
-                    listItem.innerHTML = `
-                        <img src="${supervisor.profilePic || 'https://placehold.co/48x48/A0AEC0/FFFFFF?text=S'}" alt="Supervisor Photo" class="w-12 h-12 rounded-full object-cover">
-                        <div class="flex-grow">
-                            <p class="font-bold text-gray-800 dark:text-gray-200">${supervisor.name} (${supervisor.supervisorId})</p>
-                            <p class="text-sm text-gray-600 dark:text-gray-400">Username: ${supervisor.username}</p>
-                            <p class="text-sm text-gray-600 dark:text-gray-400">Email: ${supervisor.email}</p>
-                        </div>
-                    `;
-                    managerSupervisorList.appendChild(listItem);
-                });
+                supervisorLoginMessage.textContent = 'INVALID ID OR PASSWORD.';
             }
-        }
+        });
+        
+        forgotPasswordBtn.addEventListener('click', () => {
+            passwordResetModal.style.display = 'block';
+        });
 
-        function renderAdminTools() {
-            const adminComputerList = document.getElementById('adminComputerList');
-            const issueList = document.getElementById('issueList');
-            const supervisorList = document.getElementById('supervisorList');
-            if (!adminComputerList || !issueList || !supervisorList) return;
+        cancelResetBtn.addEventListener('click', () => {
+            passwordResetModal.style.display = 'none';
+        });
 
-            // Admin Computer List
-            adminComputerList.innerHTML = '';
-            appData.computers.forEach(c => {
-                const listItem = document.createElement('div');
-                let statusClass = 'bg-green-500';
-                let statusText = 'Available';
-                let buttonHtml = `<button class="bg-blue-500 text-white px-3 py-1 rounded-md text-sm hover:bg-blue-600 transition-colors duration-200" onclick="toggleMaintenance(${c.id})">Maint.</button>`;
-
-                if (!c.available) {
-                    statusClass = 'bg-red-500';
-                    statusText = `Occupied by ${c.occupiedBy}`;
-                    buttonHtml = `
-                        <button class="bg-red-500 text-white px-3 py-1 rounded-md text-sm hover:bg-red-600 transition-colors duration-200" onclick="kickUser(${c.id})">Kick</button>
-                        <button class="bg-blue-500 text-white px-3 py-1 rounded-md text-sm hover:bg-blue-600 transition-colors duration-200" onclick="toggleMaintenance(${c.id})">Maint.</button>
-                    `;
-                } else if (c.onMaintenance) {
-                    statusClass = 'bg-yellow-500';
-                    statusText = 'Under Maintenance';
-                    buttonHtml = `<button class="bg-green-500 text-white px-3 py-1 rounded-md text-sm hover:bg-green-600 transition-colors duration-200" onclick="toggleMaintenance(${c.id})">Clear</button>`;
-                }
-
-                listItem.className = `flex justify-between items-center bg-gray-100 dark:bg-gray-700 p-4 rounded-lg shadow mb-2`;
-                listItem.innerHTML = `
-                    <div class="flex items-center">
-                        <p class="font-bold text-gray-800 dark:text-gray-200">Computer ${c.id}</p>
-                        <span class="status-pill text-white text-xs px-2 py-1 rounded-full ml-2 ${statusClass}">${statusText}</span>
-                    </div>
-                    <div class="flex gap-2">${buttonHtml}</div>
-                `;
-                adminComputerList.appendChild(listItem);
-            });
-
-            // Issue List
-            issueList.innerHTML = '';
-            appData.issues.filter(i => !i.resolved).forEach(i => {
-                const listItem = document.createElement('div');
-                listItem.className = 'flex justify-between items-center bg-gray-100 dark:bg-gray-700 p-4 rounded-lg shadow mb-2';
-                listItem.innerHTML = `
-                    <div>
-                        <p class="font-bold text-gray-800 dark:text-gray-200">Computer ${i.computerId}</p>
-                        <p class="text-sm text-gray-600 dark:text-gray-400">${i.description}</p>
-                    </div>
-                    <div class="flex gap-2">
-                        <button class="bg-blue-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-blue-600 transition-colors duration-200" onclick="resolveIssue('${i.id}')">Resolve</button>
-                    </div>
-                `;
-                issueList.appendChild(listItem);
-            });
-
-            // Supervisor List
-            supervisorList.innerHTML = '';
-            appData.users.filter(u => u.role === 'supervisor').forEach(sup => {
-                const listItem = document.createElement('div');
-                listItem.className = `flex justify-between items-center bg-gray-100 dark:bg-gray-700 p-4 rounded-lg shadow mb-2 ${sup.isBlocked ? 'border-l-4 border-red-500' : ''}`;
-                listItem.innerHTML = `
-                    <div class="flex items-center gap-4">
-                        <img src="${sup.profilePic || 'https://placehold.co/48x48/A0AEC0/FFFFFF?text=S'}" alt="Profile Picture" class="w-12 h-12 rounded-full object-cover">
-                        <div>
-                            <p class="font-bold text-gray-800 dark:text-gray-200">${sup.name} (${sup.supervisorId})</p>
-                            <p class="text-sm text-gray-600 dark:text-gray-400">Username: ${sup.username}</p>
-                            ${sup.isBlocked ? `<p class="text-sm text-red-500">Account Blocked</p>` : ''}
-                        </div>
-                    </div>
-                    <div>
-                        ${sup.isBlocked ? `<button class="bg-green-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-green-600 transition-colors duration-200" onclick="unblockSupervisor('${sup.supervisorId}')">Unblock</button>` : ''}
-                    </div>
-                `;
-                supervisorList.appendChild(listItem);
-            });
-        }
-
-        // This is the main function that updates the entire user interface based on the current state
-        function updateUI() {
-            const loginSelectionPanel = document.getElementById('loginSelectionPanel');
-            const loginFormPanel = document.getElementById('loginFormPanel');
-            const mainDashboard = document.getElementById('mainDashboard');
-            const supervisorDashboard = document.getElementById('supervisorDashboard');
-            const adminDashboard = document.getElementById('adminDashboard');
-            const managerDashboard = document.getElementById('managerDashboard');
-            const sidebar = document.getElementById('sidebar');
-            const supervisorOnDutyPanel = document.getElementById('supervisorOnDutyPanel');
-            const supervisorOnDutyInfo = document.getElementById('supervisorOnDutyInfo');
-            const noSupervisorMessage = document.getElementById('noSupervisorMessage');
-            const onDutyNameSpan = document.getElementById('onDutyNameSpan');
-            const onDutyUsernameSpan = document.getElementById('onDutyUsernameSpan');
-            const onDutyIdSpan = document.getElementById('onDutyIdSpan');
-            const adminMessagePanel = document.getElementById('adminMessagePanel');
-            const supervisorNav = document.getElementById('supervisorNav');
-            const adminNav = document.getElementById('adminNav');
-            const managerNav = document.getElementById('managerNav');
-            const adminViewSwitcher = document.getElementById('admin-view-switcher');
-
-            if (loggedInUser) {
-                loginSelectionPanel.style.display = 'none';
-                loginFormPanel.style.display = 'none';
-                mainDashboard.style.display = 'flex';
-                sidebar.style.display = 'flex';
-
-                document.getElementById('headerUser').textContent = loggedInUser.name;
-                document.getElementById('headerRole').textContent = loggedInRole;
-                document.getElementById('headerAvatar').src = loggedInUser.profilePic || 'https://placehold.co/32x32/A0AEC0/FFFFFF?text=S';
-
-                managerDashboard.style.display = 'none';
-                adminDashboard.style.display = 'none';
-                supervisorDashboard.style.display = 'none';
-                supervisorOnDutyPanel.style.display = 'block';
-
-                supervisorNav.classList.add('hidden');
-                adminNav.classList.add('hidden');
-                managerNav.classList.add('hidden');
-
-                if (loggedInRole === 'admin') {
-                    adminMessagePanel.style.display = 'block';
-                    adminNav.classList.remove('hidden');
-                    if (currentAdminView === 'admin') {
-                        adminDashboard.style.display = 'flex';
-                        adminViewSwitcher.style.display = 'flex';
-                        showPanel('registrationPanel');
-                        renderAdminTools();
-                    } else if (currentAdminView === 'supervisor') {
-                        adminDashboard.style.display = 'flex';
-                        adminViewSwitcher.style.display = 'flex';
-                        showPanel('supervisorStatusPanel');
-                        renderLabStatus();
-                        renderOccupiedList();
-                        renderComputerSelect();
-                        renderIssueComputerSelect();
-                        renderMessages();
-                    }
-                } else if (loggedInRole === 'supervisor') {
-                    supervisorDashboard.style.display = 'flex';
-                    adminMessagePanel.style.display = 'block';
-                    supervisorNav.classList.remove('hidden');
-                    supervisorOnDutyPanel.style.display = 'block';
-                    adminViewSwitcher.style.display = 'none';
-                    showPanel('supervisorStatusPanel');
-                    renderLabStatus();
-                    renderOccupiedList();
-                    renderComputerSelect();
-                    renderIssueComputerSelect();
-                    renderMessages();
-                } else if (loggedInRole === 'manager') {
-                    managerDashboard.style.display = 'flex';
-                    supervisorOnDutyPanel.style.display = 'none';
-                    adminMessagePanel.style.display = 'none';
-                    managerNav.classList.remove('hidden');
-                    showPanel('managerReportPanel');
-                    renderManagerTools();
-                    renderUserReports();
-                }
-            } else {
-                mainDashboard.style.display = 'none';
-                loginSelectionPanel.style.display = 'flex';
-                loginFormPanel.style.display = 'none';
-                sidebar.style.display = 'none';
-                adminMessagePanel.style.display = 'none';
-                supervisorOnDutyPanel.style.display = 'none';
-                supervisorNav.classList.add('hidden');
-                adminNav.classList.add('hidden');
-                managerNav.classList.add('hidden');
-            }
-
-            // Check if there is a supervisor on duty and display their info
-            if (appData.supervisorOnDuty) {
-                supervisorOnDutyInfo.style.display = 'flex';
-                noSupervisorMessage.style.display = 'none';
-                onDutyNameSpan.textContent = appData.supervisorOnDuty.name;
-                onDutyUsernameSpan.textContent = appData.supervisorOnDuty.username;
-                onDutyIdSpan.textContent = appData.supervisorOnDuty.supervisorId;
-                document.getElementById('onDutyProfilePic').src = appData.supervisorOnDuty.profilePic || 'https://placehold.co/64x64/A0AEC0/FFFFFF?text=S';
-            } else {
-                supervisorOnDutyInfo.style.display = 'none';
-                noSupervisorMessage.style.display = 'block';
-            }
-            renderMessages();
-            renderSessionHistory();
-        }
-
-        // This function runs when the page is fully loaded
-        window.addEventListener('load', () => {
-            // Get all the elements we'll be interacting with
-            const loginSelectionPanel = document.getElementById('loginSelectionPanel');
-            const loginFormPanel = document.getElementById('loginFormPanel');
-            const managerButton = document.getElementById('managerButton');
-            const adminButton = document.getElementById('adminButton');
-            const supervisorButton = document.getElementById('supervisorButton');
-            const backButton = document.getElementById('backButton');
-            const loginForm = document.getElementById('loginForm');
-            const logoutButton = document.getElementById('logoutButton');
-            const usernameInput = document.getElementById('usernameInput');
-            const passwordInput = document.getElementById('passwordInput');
-            const roleInput = document.getElementById('roleInput');
-            const secretCodeContainer = document.getElementById('secretCodeContainer');
-            const secretCodeInput = document.getElementById('secretCodeInput');
-            const loginMessage = document.getElementById('loginMessage');
-
-            // Supervisor Panel elements
-            const studentSearchInput = document.getElementById('studentSearchInput');
-            const searchButton = document.getElementById('searchButton');
-            const searchMessage = document.getElementById('searchMessage');
-            const studentDetails = document.getElementById('studentDetails');
-            const selectedStudentName = document.getElementById('selectedStudentName');
-            const selectedStudentId = document.getElementById('selectedStudentId');
-            const selectedStudentHostel = document.getElementById('selectedStudentHostel');
-            const selectedStudentRoom = document.getElementById('selectedStudentRoom');
-            const selectedStudentProfilePic = document.getElementById('selectedStudentProfilePic');
-            const computerSelect = document.getElementById('computerSelect');
-            const assignButton = document.getElementById('assignButton');
-            const issueReportForm = document.getElementById('issueReportForm');
-            const issueComputerSelect = document.getElementById('issueComputerSelect');
-            const issueDescriptionInput = document.getElementById('issueDescriptionInput');
-            const issueReportMessage = document.getElementById('issueReportMessage');
-            const changePasswordForm = document.getElementById('changePasswordForm');
-            const supIdChangeInput = document.getElementById('supIdChangeInput');
-            const oldPasswordInput = document.getElementById('oldPasswordInput');
-            const newPasswordInput = document.getElementById('newPasswordInput');
-            const confirmNewPasswordInput = document.getElementById('confirmNewPasswordInput');
-            const passwordChangeMessage = document.getElementById('passwordChangeMessage');
-
-            // Admin Panel elements
-            const registrationForm = document.getElementById('registrationForm');
-            const regNameInput = document.getElementById('regNameInput');
-            const regIdInput = document.getElementById('regIdInput');
-            const regHostelInput = document.getElementById('regHostelInput');
-            const regRoomInput = document.getElementById('regRoomInput');
-            const regProfilePicInput = document.getElementById('regProfilePicInput');
-            const registrationMessage = document.getElementById('registrationMessage');
-            const supervisorRegistrationForm = document.getElementById('supervisorRegistrationForm');
-            const supRegNameInput = document.getElementById('supRegNameInput');
-            const supRegIdInput = document.getElementById('supRegIdInput');
-            const supRegUsernameInput = document.getElementById('supRegUsernameInput');
-            const supRegPasswordInput = document.getElementById('supRegPasswordInput');
-            const supRegEmailInput = document.getElementById('supRegEmailInput');
-            const supRegProfilePicInput = document.getElementById('supRegProfilePicInput');
-            const supervisorRegistrationMessage = document.getElementById('supervisorRegistrationMessage');
-            const computerManagementMessage = document.getElementById('computerManagementMessage');
-            const adminMessageForm = document.getElementById('adminMessageForm');
-            const adminMessageInput = document.getElementById('adminMessageInput');
-            const issueMessage = document.getElementById('issueMessage');
-            const viewSupervisorPanelButton = document.getElementById('viewSupervisorPanelButton');
-            const backToAdminButton = document.getElementById('backToAdminButton');
-
-            // --- EVENT LISTENERS (WHAT HAPPENS WHEN YOU CLICK A BUTTON) ---
-
-            // Login button clicks
-            managerButton.addEventListener('click', () => {
-                loginSelectionPanel.style.display = 'none';
-                loginFormPanel.style.display = 'flex';
-                roleInput.value = 'manager';
-                secretCodeContainer.style.display = 'block';
-            });
-
-            adminButton.addEventListener('click', () => {
-                loginSelectionPanel.style.display = 'none';
-                loginFormPanel.style.display = 'flex';
-                roleInput.value = 'admin';
-                secretCodeContainer.style.display = 'block';
-            });
-
-            supervisorButton.addEventListener('click', () => {
-                loginSelectionPanel.style.display = 'none';
-                loginFormPanel.style.display = 'flex';
-                roleInput.value = 'supervisor';
-                secretCodeContainer.style.display = 'none';
-            });
-
-            backButton.addEventListener('click', () => {
-                loginFormPanel.style.display = 'none';
-                loginSelectionPanel.style.display = 'flex';
-                loginForm.reset();
-                hideMessage(loginMessage);
-            });
-
-            // Handle login form submission
-            loginForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const username = usernameInput.value.trim().toUpperCase();
-                const password = passwordInput.value.trim();
-                const role = roleInput.value;
-
-                hideMessage(loginMessage);
-
-                // Check for special case login codes first
-                if (role === 'admin' && username === 'BAUER' && password === '16342950') {
-                    if (secretCodeInput.value.trim() !== 'TANGO@ECHO$ALPHA$DELTA$BRAVOW%') {
-                        showMessage(loginMessage, 'Invalid secret code for Admin.', 'red');
-                        return;
-                    }
-                } else if (role === 'manager' && username === 'GIVEN' && password === '200320@1') {
-                    if (secretCodeInput.value.trim() !== 'TANGO@CHALIE$DELTA%') {
-                        showMessage(loginMessage, 'Invalid secret code for Manager.', 'red');
-                        return;
-                    }
-                }
-
-                const user = appData.users.find(u => u.username === username && u.password === password && u.role === role);
-
-                if (user) {
-                    if (user.role === 'supervisor' && user.isBlocked) {
-                        showMessage(loginMessage, 'Your account is blocked. Please contact the Admin.', 'red');
-                        return;
-                    }
-                    loggedInUser = user;
-                    loggedInRole = user.role;
-                    logActivity('User logged in', { user: loggedInUser });
-                    loginForm.reset();
-                    updateUI();
-                } else {
-                    showMessage(loginMessage, 'Invalid credentials. Please try again.', 'red');
-                }
-            });
-
-            // Logout button click
-            logoutButton.addEventListener('click', () => {
-                logActivity('User logged out', { user: loggedInUser });
-                loggedInUser = null;
-                loggedInRole = null;
-                updateUI();
-            });
-
-            // Supervisor Search Functionality
-            studentSearchInput.addEventListener('input', () => {
-                hideMessage(searchMessage);
-                studentDetails.style.display = 'none';
-            });
-
-            searchButton.addEventListener('click', () => {
-                const studentId = studentSearchInput.value.trim();
-                const student = appData.users.find(u => u.role === 'student' && u.studentId === studentId);
-
-                if (student) {
-                    selectedStudentName.textContent = student.name;
-                    selectedStudentId.textContent = student.studentId;
-                    selectedStudentHostel.textContent = student.hostel;
-                    selectedStudentRoom.textContent = student.room;
-                    selectedStudentProfilePic.src = student.profilePic || 'https://placehold.co/64x64/A0AEC0/FFFFFF?text=S';
-                    studentDetails.style.display = 'block';
-                    hideMessage(searchMessage);
-                } else {
-                    studentDetails.style.display = 'none';
-                    showMessage(searchMessage, 'Student not found.', 'red');
-                }
-            });
-
-            // Assign Computer Functionality
-            assignButton.addEventListener('click', () => {
-                const studentId = selectedStudentId.textContent;
-                const computerId = computerSelect.value;
-                const student = appData.users.find(u => u.role === 'student' && u.studentId === studentId);
-                const computer = appData.computers.find(c => c.id === parseInt(computerId));
-                const supervisor = loggedInUser;
-
-                if (student && computer && computer.available && !computer.onMaintenance) {
-                    computer.available = false;
-                    computer.occupiedBy = student.name;
-                    computer.studentId = student.studentId;
-                    computer.studentProfilePic = student.profilePic;
-
-                    appData.sessions.push({
-                        timestamp: Date.now(),
-                        computerId: computer.id,
-                        student: student,
-                        supervisor: supervisor,
-                        duration: null
-                    });
-
-                    saveData(appData);
-                    logActivity(`Assigned Computer ${computer.id} to student`, { computer: computer, student: student });
-                    renderComputerSelect();
-                    renderLabStatus();
-                    renderOccupiedList();
-                    showMessage(searchMessage, `Successfully assigned Computer ${computer.id} to ${student.name}.`, 'green');
-                } else {
-                    showMessage(searchMessage, 'Assignment failed. Please select an available student and computer.', 'red');
-                }
-            });
-
-            // Release Computer Functionality
-            window.releaseComputer = (computerId) => {
-                const computer = appData.computers.find(c => c.id === computerId);
-                if (computer) {
-                    const session = appData.sessions.find(s => s.computerId === computerId && s.duration === null);
-                    if (session) {
-                        session.duration = (Date.now() - session.timestamp) / 1000;
-                    }
-                    logActivity(`Released Computer ${computer.id} from student`, { computer: computer, student: { name: computer.occupiedBy, studentId: computer.studentId } });
-                    computer.available = true;
-                    computer.occupiedBy = null;
-                    computer.studentId = null;
-                    computer.studentProfilePic = null;
-                    saveData(appData);
-                    renderComputerSelect();
-                    renderLabStatus();
-                    renderOccupiedList();
-                    renderSessionHistory();
-                }
-            };
-
-            // Admin kick user functionality
-            window.kickUser = (computerId) => {
-                const computer = appData.computers.find(c => c.id === computerId);
-                if (computer) {
-                    const session = appData.sessions.find(s => s.computerId === computerId && s.duration === null);
-                    if (session) {
-                        session.duration = (Date.now() - session.timestamp) / 1000;
-                    }
-                    logActivity(`Admin kicked user from Computer ${computer.id}`, { computer: computer, student: { name: computer.occupiedBy, studentId: computer.studentId } });
-                    computer.available = true;
-                    computer.occupiedBy = null;
-                    computer.studentId = null;
-                    computer.studentProfilePic = null;
-                    saveData(appData);
-                    renderAdminTools();
-                    renderSessionHistory();
-                    showMessage(computerManagementMessage, `User successfully kicked from Computer ${computerId}.`, 'green');
-                }
-            };
-
-            // Report an issue
-            issueReportForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const computerId = issueComputerSelect.value;
-                const description = issueDescriptionInput.value.trim();
-
-                if (computerId && description) {
-                    const newIssue = {
-                        id: `issue_${Date.now()}`,
-                        computerId: parseInt(computerId),
-                        description: description,
-                        resolved: false,
-                        timestamp: Date.now()
-                    };
-                    appData.issues.push(newIssue);
-                    saveData(appData);
-                    logActivity(`Reported issue on Computer ${computerId}`, { issue: newIssue });
-                    issueReportForm.reset();
-                    showMessage(issueReportMessage, 'Issue reported successfully!', 'green');
-                    renderAdminTools();
-                } else {
-                    showMessage(issueReportMessage, 'Please select a computer and provide a description.', 'red');
-                }
-            });
-
-            // Supervisor change password functionality
-            changePasswordForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const supId = supIdChangeInput.value.trim();
-                const oldPassword = oldPasswordInput.value.trim();
-                const newPassword = newPasswordInput.value.trim();
-                const confirmNewPassword = confirmNewPasswordInput.value.trim();
-
-                const supervisor = appData.users.find(u => u.role === 'supervisor' && u.supervisorId === supId);
-
-                if (!supervisor) {
-                    showMessage(passwordChangeMessage, 'Supervisor ID not found.', 'red');
-                    return;
-                }
-
-                if (supervisor.password !== oldPassword) {
-                    showMessage(passwordChangeMessage, 'Incorrect old password.', 'red');
-                    return;
-                }
-
-                if (newPassword !== confirmNewPassword) {
-                    showMessage(passwordChangeMessage, 'New passwords do not match.', 'red');
-                    return;
-                }
-
-                if (newPassword.length < 6) {
-                    showMessage(passwordChangeMessage, 'New password must be at least 6 characters long.', 'red');
-                    return;
-                }
-
-                if (newPassword === oldPassword) {
-                    showMessage(passwordChangeMessage, 'New password cannot be the same as the old password.', 'red');
-                    return;
-                }
-
+        passwordResetForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = e.target['reset-name'].value;
+            const id = e.target['reset-id'].value;
+            const oldPassword = e.target['reset-old-password'].value;
+            const newPassword = e.target['reset-new-password'].value;
+            const supervisor = appData.supervisors.find(sup => sup.id === id && sup.name === name);
+            const resetMessage = document.getElementById('reset-message');
+            if (supervisor && supervisor.password === oldPassword) {
                 supervisor.password = newPassword;
-                saveData(appData);
-                logActivity('Changed their password', { user: supervisor });
-                changePasswordForm.reset();
-                showMessage(passwordChangeMessage, 'Password changed successfully!', 'green');
-            });
+                passwordResetModal.style.display = 'none';
+                resetMessage.textContent = '';
+                alert('PASSWORD RESET SUCCESSFUL!');
+                logActivity(`PASSWORD FOR SUPERVISOR ${supervisor.name} (ID: ${supervisor.id}) WAS RESET.`);
+            } else {
+                resetMessage.textContent = 'DETAILS DO NOT MATCH. PLEASE CHECK YOUR INFORMATION.';
+            }
+        });
 
-            // Admin registration functionality
-            registrationForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const file = regProfilePicInput.files[0];
+        document.getElementById('admin-logout-btn').addEventListener('click', () => {
+            logActivity('Admin logged out.');
+            appData.currentUser = null;
+            showScreen('login-screen');
+        });
+        
+        document.getElementById('supervisor-logout-btn').addEventListener('click', () => {
+            logActivity(`Supervisor ${appData.currentUser.name} logged out.`);
+            appData.currentUser = null;
+            showScreen('login-screen');
+        });
 
-                const createStudent = (profilePicUrl) => {
-                    const newStudent = {
-                        name: regNameInput.value.trim(),
-                        studentId: regIdInput.value.trim(),
-                        hostel: regHostelInput.value.trim(),
-                        room: regRoomInput.value.trim(),
-                        profilePic: profilePicUrl,
-                        role: 'student'
-                    };
+        function showScreen(screenId) {
+            loginScreen.style.display = 'none';
+            adminDashboard.style.display = 'none';
+            supervisorDashboard.style.display = 'none';
+            document.getElementById(screenId).style.display = 'block';
+        }
+        
+        // --- Admin Dashboard Functions ---
+        function renderAdminDashboard() {
+            renderSupervisorList();
+            renderStationStatusAdmin();
+            renderChat(adminChatBox);
+        }
 
-                    if (appData.users.find(u => u.studentId === newStudent.studentId && u.role === 'student')) {
-                        showMessage(registrationMessage, 'A student with this ID already exists.', 'red');
-                        return;
-                    }
-
-                    appData.users.push(newStudent);
-                    saveData(appData);
-                    logActivity('Registered a new student', { student: newStudent });
-                    registrationForm.reset();
-                    showMessage(registrationMessage, 'Student registered successfully!', 'green');
-                    renderUserReports();
-                };
-
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(event) {
-                        createStudent(event.target.result);
-                    };
-                    reader.readAsDataURL(file);
-                } else {
-                    createStudent('https://placehold.co/48x48/A0AEC0/FFFFFF?text=S');
-                }
-            });
-
-            // Supervisor registration functionality
-            supervisorRegistrationForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const file = supRegProfilePicInput.files[0];
-
-                const createSupervisor = (profilePicUrl) => {
-                    const newSupervisor = {
-                        name: supRegNameInput.value.trim(),
-                        supervisorId: supRegIdInput.value.trim(),
-                        username: supRegUsernameInput.value.trim().toUpperCase(),
-                        password: supRegPasswordInput.value.trim(),
-                        email: supRegEmailInput.value.trim(),
-                        profilePic: profilePicUrl,
-                        role: 'supervisor',
-                        isBlocked: false
-                    };
-
-                    if (appData.users.find(u => u.supervisorId === newSupervisor.supervisorId && u.role === 'supervisor')) {
-                        showMessage(supervisorRegistrationMessage, 'A supervisor with this ID already exists.', 'red');
-                        return;
-                    }
-
-                    if (appData.users.find(u => (u.role === 'supervisor' || u.role === 'admin') && u.username.toUpperCase() === newSupervisor.username)) {
-                        showMessage(supervisorRegistrationMessage, 'A supervisor or admin with this username already exists. Please choose another one.', 'red');
-                        return;
-                    }
-
-                    appData.users.push(newSupervisor);
-                    saveData(appData);
-                    logActivity('Registered a new supervisor', { supervisor: newSupervisor });
-                    supervisorRegistrationForm.reset();
-                    renderAdminTools();
-                    renderUserReports();
-                    showMessage(supervisorRegistrationMessage, 'Supervisor registered successfully!', 'green');
-                };
-
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(event) {
-                        createSupervisor(event.target.result);
-                    };
-                    reader.readAsDataURL(file);
-                } else {
-                    createSupervisor('https://placehold.co/48x48/A0AEC0/FFFFFF?text=S');
-                }
-            });
-
-            // Admin message functionality
-            adminMessageForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const messageText = adminMessageInput.value.trim();
-                if (messageText) {
-                    appData.messages.push({
-                        sender: 'Admin',
-                        text: messageText,
-                        timestamp: Date.now()
-                    });
-                    saveData(appData);
-                    logActivity('Sent a message to all users', { message: messageText });
-                    adminMessageForm.reset();
-                    renderMessages();
-                }
-            });
-
-            // Admin tool functions
-            window.toggleMaintenance = (computerId) => {
-                const computer = appData.computers.find(c => c.id === computerId);
-                if (computer) {
-                    computer.onMaintenance = !computer.onMaintenance;
-                    if (computer.onMaintenance && !computer.available) {
-                        releaseComputer(computerId);
-                    }
-                    saveData(appData);
-                    logActivity(`${computer.onMaintenance ? 'Put' : 'Removed'} Computer ${computer.id} ${computer.onMaintenance ? 'on' : 'from'} maintenance`, { computer: computer });
-                    renderAdminTools();
-                    renderComputerSelect();
-                    showMessage(computerManagementMessage, `Computer ${computerId} is now ${computer.onMaintenance ? 'under maintenance' : 'back in service'}.`, 'green');
-                }
+        studentRegisterForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const student = {
+                name: e.target['student-name'].value,
+                id: e.target['student-id'].value,
+                hostel: e.target['student-hostel'].value,
+                program: e.target['student-program'].value,
+                year: e.target['student-year'].value,
+                photo: e.target['student-photo'].files[0] ? URL.createObjectURL(e.target['student-photo'].files[0]) : null
             };
+            appData.students.push(student);
+            studentRegisterForm.reset();
+            studentRegisterMessage.textContent = `STUDENT ${student.name} REGISTERED SUCCESSFULLY!`;
+            studentRegisterMessage.className = 'text-center mt-2 text-neon-green';
+            logActivity(`ADMIN REGISTERED STUDENT ${student.name} (ID: ${student.id}).`);
+        });
 
-            window.resolveIssue = (issueId) => {
-                const issue = appData.issues.find(i => i.id === issueId);
-                if (issue) {
-                    issue.resolved = true;
-                    saveData(appData);
-                    logActivity(`Resolved issue on Computer ${issue.computerId}`, { issue: issue });
-                    renderAdminTools();
-                    showMessage(issueMessage, `Issue on Computer ${issue.computerId} has been marked as resolved.`, 'green');
-                }
+        supervisorRegisterForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const supervisor = {
+                name: e.target['supervisor-name'].value,
+                id: e.target['supervisor-reg-id'].value,
+                email: e.target['supervisor-email'].value,
+                password: e.target['supervisor-reg-password'].value,
+                photo: e.target['supervisor-photo'].files[0] ? URL.createObjectURL(e.target['supervisor-photo'].files[0]) : null,
+                isBlocked: false
             };
+            appData.supervisors.push(supervisor);
+            supervisorRegisterForm.reset();
+            supervisorRegisterMessage.textContent = `SUPERVISOR ${supervisor.name} REGISTERED SUCCESSFULLY!`;
+            supervisorRegisterMessage.className = 'text-center mt-2 text-neon-green';
+            renderSupervisorList();
+            logActivity(`ADMIN REGISTERED NEW SUPERVISOR ${supervisor.name} (ID: ${supervisor.id}).`);
+        });
+        
+        function renderSupervisorList() {
+            supervisorList.innerHTML = '';
+            appData.supervisors.forEach(sup => {
+                const supervisorItem = document.createElement('div');
+                supervisorItem.className = 'system-panel flex-container';
+                supervisorItem.innerHTML = `
+                    <div style="display:flex; gap: 1rem; align-items: center;">
+                        ${sup.photo ? `<img src="${sup.photo}" alt="${sup.name}" style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 1px dashed #00ff00;">` : `<div style="width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; background: #333; border-radius: 50%;">N/A</div>`}
+                        <div>
+                            <p class="text-xl">${sup.name} (${sup.id})</p>
+                            <p class="text-sm">${sup.email}</p>
+                            <p class="text-xs ${sup.isBlocked ? 'text-neon-red' : 'text-neon-green'}">${sup.isBlocked ? 'BLOCKED' : 'ACTIVE'}</p>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button onclick="toggleSupervisorBlock('${sup.id}')" class="btn-warning" style="background-color: ${sup.isBlocked ? '#00cc00' : '#ffff33'}; border-color: ${sup.isBlocked ? '#00cc00' : '#ffff33'}; color: #000;">
+                            ${sup.isBlocked ? 'UNBLOCK' : 'BLOCK'}
+                        </button>
+                        <button onclick="deleteSupervisor('${sup.id}')" class="btn-danger" style="background-color: #ff3333; border-color: #ff3333; color: #000;">DELETE</button>
+                    </div>
+                `;
+                supervisorList.appendChild(supervisorItem);
+            });
+        }
+        
+        window.toggleSupervisorBlock = (id) => {
+            const supervisor = appData.supervisors.find(sup => sup.id === id);
+            if (supervisor) {
+                supervisor.isBlocked = !supervisor.isBlocked;
+                renderSupervisorList();
+                logActivity(`ADMIN ${supervisor.isBlocked ? 'BLOCKED' : 'UNBLOCKED'} SUPERVISOR ${supervisor.name}.`);
+            }
+        };
 
-            window.unblockSupervisor = (supId) => {
-                const supervisor = appData.users.find(u => u.role === 'supervisor' && u.supervisorId === supId);
-                if (supervisor) {
-                    supervisor.isBlocked = false;
-                    saveData(appData);
-                    logActivity(`Unblocked supervisor account for ${supervisor.name}`, { supervisor: supervisor });
-                    renderAdminTools();
+        window.deleteSupervisor = (id) => {
+            const supervisorIndex = appData.supervisors.findIndex(sup => sup.id === id);
+            if (supervisorIndex !== -1) {
+                const supervisorName = appData.supervisors[supervisorIndex].name;
+                appData.supervisors.splice(supervisorIndex, 1);
+                renderSupervisorList();
+                logActivity(`ADMIN DELETED SUPERVISOR ${supervisorName} (ID: ${id}).`);
+            }
+        };
+
+        function renderStationStatusAdmin() {
+            stationStatusAdmin.innerHTML = '';
+            appData.stations.forEach(station => {
+                const statusClass = station.isOccupied ? 'occupied' : 'unoccupied';
+                const statusText = station.isOccupied ? 'OCCUPIED' : 'UNOCCUPIED';
+                const assignedDetails = station.isOccupied ? `
+                    <p class="text-sm">ASSIGNED TO: ${station.assignedTo.name}</p>
+                    <p class="text-sm">ASSIGNED BY: ${station.assignedBy}</p>
+                ` : '';
+                const issueDetails = station.issue ? `
+                    <p class="text-xs text-neon-yellow mt-2">ISSUE: ${station.issue}</p>
+                ` : '';
+                const stationCard = document.createElement('div');
+                stationCard.className = `station-card ${statusClass} ${station.issue ? 'has-issue' : ''}`;
+                stationCard.innerHTML = `
+                    <h3 class="text-xl font-bold">STATION ${station.id}</h3>
+                    <p class="text-sm font-bold">${statusText}</p>
+                    ${assignedDetails}
+                    ${issueDetails}
+                `;
+                stationStatusAdmin.appendChild(stationCard);
+            });
+        }
+        
+        function generateReport() {
+            const totalSupervisors = appData.supervisors.length;
+            const totalStudents = appData.students.length;
+            const totalStations = appData.stations.length;
+            const occupiedStations = appData.stations.filter(s => s.isOccupied).length;
+            const unoccupiedStations = totalStations - occupiedStations;
+            document.getElementById('report-supervisors').textContent = totalSupervisors;
+            document.getElementById('report-students').textContent = totalStudents;
+            document.getElementById('report-total-stations').textContent = totalStations;
+            document.getElementById('report-occupied-stations').textContent = occupiedStations;
+            document.getElementById('report-unoccupied-stations').textContent = unoccupiedStations;
+            logActivity('ADMIN GENERATED A SYSTEM REPORT.');
+        }
+
+        function logActivity(message) {
+            const time = new Date().toLocaleTimeString();
+            const li = document.createElement('li');
+            li.textContent = `[${time}] ${message}`;
+            activityLog.prepend(li);
+        }
+
+        // --- Supervisor Dashboard Functions ---
+        function renderSupervisorDashboard() {
+            renderStationSelectors();
+            renderStationStatusSupervisor();
+            renderChat(supervisorChatBox);
+        }
+
+        function renderStationSelectors() {
+            stationSelect.innerHTML = '<option value="">SELECT A STATION</option>';
+            issueStationSelect.innerHTML = '<option value="">SELECT A STATION WITH ISSUE</option>';
+            appData.stations.forEach(station => {
+                const option = document.createElement('option');
+                option.value = station.id;
+                option.textContent = `STATION ${station.id}`;
+                if (station.isOccupied) {
+                    option.disabled = true;
+                    option.textContent += ' (OCCUPIED)';
                 }
+                stationSelect.appendChild(option);
+                const issueOption = document.createElement('option');
+                issueOption.value = station.id;
+                issueOption.textContent = `STATION ${station.id}`;
+                issueStationSelect.appendChild(issueOption);
+            });
+        }
+
+        stationAssignmentForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const stationId = parseInt(e.target['station-select'].value);
+            const studentLookup = e.target['student-lookup-input'].value;
+            const student = appData.students.find(s => s.id === studentLookup || s.name.toLowerCase() === studentLookup.toLowerCase());
+            if (!student) {
+                studentLookupMessage.textContent = 'ERROR: STUDENT DOES NOT EXIST IN THE SYSTEM.';
+                studentLookupMessage.className = 'text-center text-neon-red mt-2';
+                return;
+            }
+            const station = appData.stations.find(s => s.id === stationId);
+            if (station && !station.isOccupied) {
+                station.isOccupied = true;
+                station.assignedTo = student;
+                station.assignedBy = appData.currentUser.name;
+                studentLookupMessage.textContent = `STATION ${stationId} SUCCESSFULLY ASSIGNED TO ${student.name}.`;
+                studentLookupMessage.className = 'text-center text-neon-green mt-2';
+                stationAssignmentForm.reset();
+                renderStationStatusSupervisor();
+                renderStationSelectors();
+                renderStationStatusAdmin();
+                logActivity(`SUPERVISOR ${appData.currentUser.name} ASSIGNED STATION ${stationId} TO STUDENT ${student.name}.`);
+            } else {
+                studentLookupMessage.textContent = 'STATION IS ALREADY OCCUPIED OR INVALID.';
+                studentLookupMessage.className = 'text-center text-neon-red mt-2';
+            }
+        });
+
+        function renderStationStatusSupervisor() {
+            stationStatusSupervisor.innerHTML = '';
+            appData.stations.forEach(station => {
+                const statusClass = station.isOccupied ? 'occupied' : 'unoccupied';
+                const statusText = station.isOccupied ? 'OCCUPIED' : 'UNOCCUPIED';
+                const assignedDetails = station.isOccupied ? `
+                    <p class="text-sm">BY: ${station.assignedTo.name}</p>
+                ` : '';
+                const issueDetails = station.issue ? `
+                    <p class="text-xs text-neon-yellow mt-2">ISSUE: ${station.issue}</p>
+                ` : '';
+                const stationCard = document.createElement('div');
+                stationCard.className = `station-card ${statusClass} ${station.issue ? 'has-issue' : ''}`;
+                stationCard.innerHTML = `
+                    <h3 class="text-xl font-bold">STATION ${station.id}</h3>
+                    <p class="text-sm font-bold">${statusText}</p>
+                    ${assignedDetails}
+                    ${issueDetails}
+                `;
+                stationStatusSupervisor.appendChild(stationCard);
+            });
+        }
+        
+        issueReportForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const stationId = parseInt(e.target['issue-station-select'].value);
+            const description = e.target['issue-description'].value;
+            const station = appData.stations.find(s => s.id === stationId);
+            if (station) {
+                station.issue = description;
+                alert(`ISSUE REPORTED FOR STATION ${stationId}: ${description}`);
+                issueReportForm.reset();
+                renderStationStatusSupervisor();
+                renderStationStatusAdmin();
+                logActivity(`SUPERVISOR ${appData.currentUser.name} REPORTED AN ISSUE WITH STATION ${stationId}.`);
+            }
+        });
+        
+        supervisorChangePasswordBtn.addEventListener('click', () => {
+            passwordChangeModal.style.display = 'block';
+        });
+
+        cancelChangeBtn.addEventListener('click', () => {
+            passwordChangeModal.style.display = 'none';
+        });
+
+        passwordChangeForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const currentPassword = e.target['current-password'].value;
+            const newPassword = e.target['new-password'].value;
+            const supervisor = appData.supervisors.find(sup => sup.id === appData.currentUser.id);
+            const changePasswordMessage = document.getElementById('change-password-message');
+            if (supervisor && supervisor.password === currentPassword) {
+                supervisor.password = newPassword;
+                passwordChangeModal.style.display = 'none';
+                changePasswordMessage.textContent = '';
+                alert('PASSWORD CHANGED SUCCESSFULLY!');
+                logActivity(`PASSWORD FOR SUPERVISOR ${supervisor.name} WAS CHANGED.`);
+            } else {
+                changePasswordMessage.textContent = 'INVALID CURRENT PASSWORD.';
+            }
+        });
+        
+        // --- Chat Functions ---
+        function renderChat(chatBox) {
+            chatBox.innerHTML = '';
+            appData.chatMessages.forEach(msg => {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `chat-message ${msg.role === 'admin' ? 'admin' : 'supervisor'}`;
+                messageDiv.innerHTML = `<p class="font-bold">${msg.sender}:</p><p>${msg.text}</p><p style="text-align: right; font-size: 0.75rem; opacity: 0.7;">${msg.time}</p>`;
+                chatBox.appendChild(messageDiv);
+            });
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        adminChatForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const input = document.getElementById('admin-chat-input');
+            const message = {
+                sender: 'ADMIN',
+                role: 'admin',
+                text: input.value,
+                time: new Date().toLocaleTimeString()
             };
+            appData.chatMessages.push(message);
+            input.value = '';
+            renderChat(adminChatBox);
+            renderChat(supervisorChatBox);
+        });
 
-            // Admin view switching
-            viewSupervisorPanelButton.addEventListener('click', () => {
-                currentAdminView = 'supervisor';
-                updateUI();
-            });
-
-            backToAdminButton.addEventListener('click', () => {
-                currentAdminView = 'admin';
-                updateUI();
-            });
-
-            // Initial render
-            updateUI();
+        supervisorChatForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const input = document.getElementById('supervisor-chat-input');
+            const message = {
+                sender: appData.currentUser.name,
+                role: 'supervisor',
+                text: input.value,
+                time: new Date().toLocaleTimeString()
+            };
+            appData.chatMessages.push(message);
+            input.value = '';
+            renderChat(supervisorChatBox);
+            renderChat(adminChatBox);
+        });
+        
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeData();
+            toggleLoginForms('admin');
         });
     </script>
 </body>
 </html>
-
-
-
-
-
-
