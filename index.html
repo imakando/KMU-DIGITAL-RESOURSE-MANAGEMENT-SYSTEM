@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin & Supervisor System (Terminal Style)</title>
-    <!-- Lucide Icons CDN for avatars and UI icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap');
@@ -67,7 +66,6 @@
         button.btn-danger { background-color: #ff3333; border-color: #ff3333; }
         button.btn-warning { background-color: #ffff33; border-color: #ffff33; }
         button.btn-success { background-color: #00cc00; border-color: #00cc00; }
-
         button:hover {
             filter: brightness(1.2);
             box-shadow: 0 0 10px;
@@ -76,7 +74,6 @@
         .text-neon-green { color: #00ff00; }
         .text-neon-red { color: #ff3333; }
         .text-neon-yellow { color: #ffff33; }
-
         .flex-container {
             display: flex;
             gap: 2rem;
@@ -104,7 +101,7 @@
             border-color: #00cc00;
             background-color: rgba(0, 204, 0, 0.1);
         }
-        .station-card.has-issue {
+        .station-card.needs-maintenance {
             border-color: #ffff33;
             background-color: rgba(255, 255, 51, 0.1);
         }
@@ -145,26 +142,80 @@
             color: #00ff00;
             display: none;
         }
+        .broadcast-message {
+            position: fixed;
+            top: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #ff3333;
+            color: #000;
+            font-weight: bold;
+            padding: 1rem 2rem;
+            border: 2px solid #000;
+            box-shadow: 0 0 15px #ff3333;
+            z-index: 2000;
+            display: none;
+            animation: pulseGlow 1s infinite alternate;
+        }
+        @keyframes pulseGlow {
+            from { box-shadow: 0 0 5px #ff3333; }
+            to { box-shadow: 0 0 20px #ff3333; }
+        }
+        .report-section {
+            background-color: #0d0d0d;
+            padding: 1rem;
+            border: 1px solid #00ff00;
+            margin-top: 1rem;
+        }
+        .password-strength {
+            font-size: 0.8rem;
+            margin-top: -0.5rem;
+            margin-bottom: 0.5rem;
+            text-align: left;
+        }
+        .password-strength.weak { color: #ff3333; }
+        .password-strength.medium { color: #ffff33; }
+        .password-strength.strong { color: #00cc00; }
+        .blinking-dot {
+            height: 10px;
+            width: 10px;
+            background-color: #ff3333;
+            border-radius: 50%;
+            display: inline-block;
+            margin-left: 5px;
+            animation: blink 1s linear infinite;
+        }
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+        .kiosk-card {
+            background-color: #000000;
+            border: 1px solid #00ff00;
+            padding: 1rem;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
-    <!-- Main Container -->
     <div class="container">
+        <div id="broadcast-message" class="broadcast-message">
+            <p id="broadcast-text"></p>
+            <button onclick="dismissBroadcast()" style="background: #000; color: #ff3333; border-color: #ff3333;">DISMISS</button>
+        </div>
 
-        <!-- Login Screen -->
         <div id="login-screen" class="system-panel login-card">
             <h1 class="text-neon-green text-3xl font-bold mb-4 text-center">ACCESS TERMINAL</h1>
+            <p id="welcome-message" class="text-center text-neon-green mb-4"></p>
             <div class="flex flex-col items-center mb-6">
                  <div class="p-4 rounded-full mb-2 border-2 border-dashed border-neon-green">
                     <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#00ff00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-terminal-square"><path d="m7 11 2 2 4-4"/><rect width="18" height="18" x="3" y="3" rx="2"/></svg>
                 </div>
             </div>
             <div class="flex justify-center mb-8">
-                <button id="show-admin-login-btn" class="btn-primary w-1/2">ADMIN</button>
-                <button id="show-supervisor-login-btn" class="btn-success w-1/2">SUPERVISOR</button>
+                <button id="show-admin-login-btn" class="btn-primary w-1/3">ADMIN</button>
+                <button id="show-supervisor-login-btn" class="btn-success w-1/3">SUPERVISOR</button>
+                <button id="show-kiosk-btn" class="btn-warning w-1/3">KIOSK</button>
             </div>
-
-            <!-- Admin Login Form -->
             <form id="admin-login-form">
                 <h2 class="text-neon-blue text-center mb-4">ADMIN LOGIN</h2>
                 <input type="text" id="admin-username" placeholder="Username" required>
@@ -173,8 +224,6 @@
                 <button type="submit" class="btn-primary w-full">LOG IN</button>
                 <p id="admin-login-message" class="text-center text-neon-red mt-2"></p>
             </form>
-
-            <!-- Supervisor Login Form -->
             <form id="supervisor-login-form" style="display:none;">
                 <h2 class="text-neon-green text-center mb-4">SUPERVISOR LOGIN</h2>
                 <input type="text" id="supervisor-id" placeholder="ID" required>
@@ -184,8 +233,6 @@
                 <p id="supervisor-login-message" class="text-center text-neon-red mt-2"></p>
             </form>
         </div>
-
-        <!-- Admin Dashboard Screen -->
         <div id="admin-dashboard" style="display:none;">
             <div class="system-panel">
                 <div class="flex-container">
@@ -193,7 +240,6 @@
                     <button id="admin-logout-btn" class="btn-danger">LOGOUT</button>
                 </div>
                 <div class="flex-container mt-4">
-                    <!-- Registration Forms -->
                     <div class="system-panel">
                         <h2 class="text-neon-blue text-2xl font-bold mb-4">REGISTER STUDENT</h2>
                         <form id="student-register-form">
@@ -215,6 +261,7 @@
                             <input type="text" id="supervisor-reg-id" placeholder="ID" required>
                             <input type="email" id="supervisor-email" placeholder="Email" required>
                             <input type="password" id="supervisor-reg-password" placeholder="Password" required>
+                            <div id="supervisor-password-strength" class="password-strength"></div>
                             <label class="text-neon-green">PHOTO UPLOAD</label>
                             <input type="file" id="supervisor-photo">
                             <button type="submit" class="btn-primary w-full mt-4">REGISTER</button>
@@ -222,13 +269,11 @@
                         </form>
                     </div>
                 </div>
-                
-                <!-- Supervisor Management & Reports -->
                 <div class="system-panel mt-4">
-                    <h2 class="text-neon-blue text-2xl font-bold mb-4">SUPERVISOR MANAGEMENT</h2>
-                    <div id="supervisor-list" class="grid-container"></div>
+                    <h2 class="text-neon-blue text-2xl font-bold mb-4">USER MANAGEMENT</h2>
+                    <input type="text" id="user-search-input" placeholder="SEARCH STUDENT/SUPERVISOR BY NAME OR ID">
+                    <div id="user-list"></div>
                 </div>
-
                 <div class="system-panel mt-4">
                     <h2 class="text-neon-blue text-2xl font-bold mb-4">SYSTEM ACTIVITIES & REPORTS</h2>
                     <div class="flex-container">
@@ -247,15 +292,39 @@
                         </div>
                     </div>
                 </div>
-                
-                <!-- Station Status & Chat -->
+                <div class="system-panel mt-4">
+                    <h2 class="text-neon-blue text-2xl font-bold mb-4">CUSTOM REPORTS</h2>
+                    <form id="custom-report-form">
+                        <label for="report-start-date" class="text-neon-green">Start Date:</label>
+                        <input type="date" id="report-start-date">
+                        <label for="report-end-date" class="text-neon-green">End Date:</label>
+                        <input type="date" id="report-end-date">
+                        <label class="text-neon-green">Select Metrics:</label>
+                        <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;">
+                            <label><input type="checkbox" name="metric" value="mostUsed" checked> Most Used Stations</label>
+                            <label><input type="checkbox" name="metric" value="leastUsed" checked> Least Used Stations</label>
+                            <label><input type="checkbox" name="metric" value="averageSession"> Average Session Time</label>
+                        </div>
+                        <button type="submit" class="btn-primary w-full">GENERATE CUSTOM REPORT</button>
+                    </form>
+                    <div id="custom-report-output" class="report-section" style="display: none;"></div>
+                </div>
                 <div class="system-panel mt-4">
                     <h2 class="text-neon-blue text-2xl font-bold mb-4">STATION STATUS</h2>
                     <div id="station-status-admin" class="grid-container"></div>
                 </div>
-
                 <div class="system-panel mt-4">
-                    <h2 class="text-neon-blue text-2xl font-bold mb-4">CHAT WITH SUPERVISORS</h2>
+                    <h2 class="text-neon-blue text-2xl font-bold mb-4">EMERGENCY BROADCAST</h2>
+                    <form id="broadcast-form">
+                        <textarea id="broadcast-message-input" placeholder="Type urgent message here..." rows="2" required></textarea>
+                        <button type="submit" class="btn-danger w-full mt-2">SEND BROADCAST</button>
+                    </form>
+                </div>
+                <div class="system-panel mt-4">
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <h2 class="text-neon-blue text-2xl font-bold">CHAT WITH SUPERVISORS</h2>
+                        <span id="admin-chat-notification" class="blinking-dot" style="display:none;"></span>
+                    </div>
                     <div id="admin-chat-box" class="chat-container"></div>
                     <form id="admin-chat-form" style="display:flex; gap: 1rem; margin-top: 1rem;">
                         <input type="text" id="admin-chat-input" placeholder="> TYPE MESSAGE..." style="flex-grow: 1;" required>
@@ -264,20 +333,21 @@
                 </div>
             </div>
         </div>
-
-        <!-- Supervisor Dashboard Screen -->
         <div id="supervisor-dashboard" style="display:none;">
             <div class="system-panel">
                 <div class="flex-container">
-                    <h1 class="text-neon-green text-3xl font-bold">SUPERVISOR DASHBOARD</h1>
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <div id="supervisor-profile-photo" style="width: 48px; height: 48px; border-radius: 50%; border: 1px dashed #00ff00; overflow: hidden; display: flex; align-items: center; justify-content: center; background: #333;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#00ff00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                        </div>
+                        <h1 class="text-neon-green text-3xl font-bold">SUPERVISOR DASHBOARD</h1>
+                    </div>
                     <div style="display:flex; gap: 1rem;">
                         <button id="supervisor-change-password-btn" class="btn-primary">CHANGE PASSWORD</button>
                         <button id="supervisor-logout-btn" class="btn-danger">LOGOUT</button>
                     </div>
                 </div>
-                
                 <div class="flex-container mt-4">
-                    <!-- Station Assignment -->
                     <div class="system-panel">
                         <h2 class="text-neon-green text-2xl font-bold mb-4">ASSIGN STATION</h2>
                         <form id="station-assignment-form">
@@ -285,32 +355,42 @@
                                 <option value="">SELECT A STATION</option>
                             </select>
                             <input type="text" id="student-lookup-input" placeholder="ENTER STUDENT ID OR NAME" required>
-                            <p id="student-lookup-message" class="text-center text-neon-red mt-2"></p>
+                            <div id="student-profile-preview" style="display: none; align-items: center; gap: 1rem; margin-top: 1rem;">
+                                <img id="student-photo-preview" src="" alt="Student Photo" style="width: 64px; height: 64px; border-radius: 50%; object-fit: cover; border: 1px dashed #00ff00;">
+                                <div id="student-details-preview"></div>
+                            </div>
+                            <label class="text-neon-green">Session Duration (minutes)</label>
+                            <input type="number" id="session-duration" placeholder="e.g., 60" min="15" value="60" required>
+                            <p id="station-assignment-message" class="text-center mt-2"></p>
                             <button type="submit" class="btn-success w-full mt-4">ASSIGN STATION</button>
                         </form>
                     </div>
-                    
-                    <!-- Station Status -->
                     <div class="system-panel">
                         <h2 class="text-neon-green text-2xl font-bold mb-4">STATION STATUS</h2>
                         <div id="station-status-supervisor" class="grid-container"></div>
                     </div>
                 </div>
-                
-                <!-- Report Issues & Chat -->
                 <div class="flex-container mt-4">
                     <div class="system-panel">
                         <h2 class="text-neon-green text-2xl font-bold mb-4">REPORT STATION ISSUES</h2>
                         <form id="issue-report-form">
                             <select id="issue-station-select" required>
-                                <option value="">SELECT STATION WITH ISSUE</option>
+                                <option value="">SELECT STATION</option>
+                            </select>
+                            <select id="issue-type" required>
+                                <option value="">SELECT ISSUE TYPE</option>
+                                <option value="Needs Maintenance">Needs Maintenance</option>
+                                <option value="Out of Service">Out of Service</option>
                             </select>
                             <textarea id="issue-description" placeholder="DESCRIBE THE ISSUE..." rows="4" required></textarea>
                             <button type="submit" class="btn-warning w-full mt-4">REPORT ISSUE</button>
                         </form>
                     </div>
                     <div class="system-panel">
-                        <h2 class="text-neon-green text-2xl font-bold mb-4">CHAT WITH ADMIN</h2>
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <h2 class="text-neon-green text-2xl font-bold mb-4">CHAT WITH ADMIN</h2>
+                            <span id="supervisor-chat-notification" class="blinking-dot" style="display:none;"></span>
+                        </div>
                         <div id="supervisor-chat-box" class="chat-container"></div>
                         <form id="supervisor-chat-form" style="display:flex; gap: 1rem; margin-top: 1rem;">
                             <input type="text" id="supervisor-chat-input" placeholder="> REPLY TO ADMIN..." style="flex-grow: 1;" required>
@@ -320,8 +400,18 @@
                 </div>
             </div>
         </div>
-
-        <!-- Modals -->
+        <div id="kiosk-screen" style="display:none;">
+            <div class="system-panel">
+                <div class="flex-container">
+                    <h1 class="text-neon-yellow text-3xl font-bold">STUDENT KIOSK</h1>
+                    <button id="kiosk-back-btn" class="btn-warning">BACK TO LOGIN</button>
+                </div>
+                <div class="system-panel mt-4">
+                    <h2 class="text-neon-yellow text-2xl font-bold mb-4">STATION STATUS OVERVIEW</h2>
+                    <div id="kiosk-station-list" class="grid-container"></div>
+                </div>
+            </div>
+        </div>
         <div id="password-reset-modal" class="message-box">
             <h3 class="text-neon-yellow text-2xl mb-4">RESET PASSWORD</h3>
             <form id="password-reset-form">
@@ -334,21 +424,26 @@
                 <p id="reset-message" class="text-center text-neon-red mt-2"></p>
             </form>
         </div>
-
         <div id="password-change-modal" class="message-box">
             <h3 class="text-neon-blue text-2xl mb-4">CHANGE PASSWORD</h3>
             <form id="password-change-form">
                 <input type="password" id="current-password" placeholder="Current Password" required>
                 <input type="password" id="new-password" placeholder="New Password" required>
+                <div id="new-password-strength" class="password-strength"></div>
                 <button type="submit" class="btn-primary w-full mt-4">CHANGE PASSWORD</button>
                 <button type="button" id="cancel-change-btn" class="btn-danger w-full mt-2">CANCEL</button>
                 <p id="change-password-message" class="text-center text-neon-red mt-2"></p>
             </form>
         </div>
-        
+        <div id="user-detail-modal" class="message-box" style="max-width: 600px;">
+            <h3 class="text-neon-blue text-2xl mb-4" id="user-modal-title"></h3>
+            <form id="edit-user-form">
+                <div id="user-modal-content"></div>
+                <button type="submit" class="btn-primary w-full mt-4">SAVE CHANGES</button>
+                <button type="button" onclick="closeModal('user-detail-modal')" class="btn-danger w-full mt-2">CLOSE</button>
+            </form>
+        </div>
     </div>
-
-    <!-- The JavaScript remains identical in functionality to the first version -->
     <script>
         // --- Data Storage (In-memory Simulation) ---
         let appData = {
@@ -357,8 +452,15 @@
             stations: [],
             chatMessages: [],
             activities: [],
-            currentUser: null
+            currentUser: null,
+            broadcastMessage: null,
+            stationUsageHistory: [],
+            maintenanceLog: []
         };
+        let sessionTimerInterval;
+        let chatNotificationInterval;
+        let lastAdminMessageTime = 0;
+        let lastSupervisorMessageTime = 0;
 
         function initializeData() {
             appData.admin = { username: 'admin', password: 'password', secretCode: '1234' };
@@ -368,41 +470,48 @@
                     isOccupied: false,
                     assignedTo: null,
                     assignedBy: null,
-                    issue: null
+                    issue: null,
+                    sessionEndTime: null,
+                    statusFlag: null
                 });
             }
         }
-        
         // --- UI Element References ---
         const loginScreen = document.getElementById('login-screen');
         const adminDashboard = document.getElementById('admin-dashboard');
         const supervisorDashboard = document.getElementById('supervisor-dashboard');
-        
+        const kioskScreen = document.getElementById('kiosk-screen');
         const adminLoginForm = document.getElementById('admin-login-form');
         const supervisorLoginForm = document.getElementById('supervisor-login-form');
         const showAdminLoginBtn = document.getElementById('show-admin-login-btn');
         const showSupervisorLoginBtn = document.getElementById('show-supervisor-login-btn');
+        const showKioskBtn = document.getElementById('show-kiosk-btn');
+        const kioskBackBtn = document.getElementById('kiosk-back-btn');
         const adminLoginMessage = document.getElementById('admin-login-message');
         const supervisorLoginMessage = document.getElementById('supervisor-login-message');
         const passwordResetModal = document.getElementById('password-reset-modal');
         const forgotPasswordBtn = document.getElementById('forgot-password-btn');
         const passwordResetForm = document.getElementById('password-reset-form');
         const cancelResetBtn = document.getElementById('cancel-reset-btn');
-
         const studentRegisterForm = document.getElementById('student-register-form');
         const supervisorRegisterForm = document.getElementById('supervisor-register-form');
+        const supervisorRegPasswordInput = document.getElementById('supervisor-reg-password');
+        const supervisorPasswordStrength = document.getElementById('supervisor-password-strength');
         const studentRegisterMessage = document.getElementById('student-register-message');
         const supervisorRegisterMessage = document.getElementById('supervisor-register-message');
-        const supervisorList = document.getElementById('supervisor-list');
+        const userList = document.getElementById('user-list');
+        const userSearchInput = document.getElementById('user-search-input');
         const activityLog = document.getElementById('activity-log');
         const stationStatusAdmin = document.getElementById('station-status-admin');
         const adminChatBox = document.getElementById('admin-chat-box');
         const adminChatForm = document.getElementById('admin-chat-form');
-
         const stationAssignmentForm = document.getElementById('station-assignment-form');
         const stationSelect = document.getElementById('station-select');
         const studentLookupInput = document.getElementById('student-lookup-input');
-        const studentLookupMessage = document.getElementById('student-lookup-message');
+        const studentLookupMessage = document.getElementById('station-assignment-message');
+        const studentProfilePreview = document.getElementById('student-profile-preview');
+        const studentPhotoPreview = document.getElementById('student-photo-preview');
+        const studentDetailsPreview = document.getElementById('student-details-preview');
         const stationStatusSupervisor = document.getElementById('station-status-supervisor');
         const issueReportForm = document.getElementById('issue-report-form');
         const issueStationSelect = document.getElementById('issue-station-select');
@@ -412,9 +521,27 @@
         const supervisorChangePasswordBtn = document.getElementById('supervisor-change-password-btn');
         const passwordChangeForm = document.getElementById('password-change-form');
         const cancelChangeBtn = document.getElementById('cancel-change-btn');
-
+        const newPasswordInput = document.getElementById('new-password');
+        const newPasswordStrength = document.getElementById('new-password-strength');
+        const supervisorProfilePhoto = document.getElementById('supervisor-profile-photo');
+        const welcomeMessage = document.getElementById('welcome-message');
+        const broadcastMessageEl = document.getElementById('broadcast-message');
+        const broadcastTextEl = document.getElementById('broadcast-text');
+        const customReportForm = document.getElementById('custom-report-form');
+        const customReportOutput = document.getElementById('custom-report-output');
+        const broadcastForm = document.getElementById('broadcast-form');
+        const userDetailModal = document.getElementById('user-detail-modal');
+        const userModalTitle = document.getElementById('user-modal-title');
+        const userModalContent = document.getElementById('user-modal-content');
+        const kioskStationList = document.getElementById('kiosk-station-list');
+        const adminChatNotification = document.getElementById('admin-chat-notification');
+        const supervisorChatNotification = document.getElementById('supervisor-chat-notification');
         // --- Authentication & Page Switching ---
-
+        function updateWelcomeMessage() {
+            const now = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+            welcomeMessage.textContent = `SYSTEM ACCESS. CURRENT TIME: ${now.toLocaleDateString('en-US', options)}`;
+        }
         function toggleLoginForms(formToShow) {
             const adminLogin = document.getElementById('admin-login-form');
             const supervisorLogin = document.getElementById('supervisor-login-form');
@@ -432,10 +559,10 @@
                 adminBtn.style.backgroundColor = '#00cc00';
             }
         }
-
         showAdminLoginBtn.addEventListener('click', () => toggleLoginForms('admin'));
         showSupervisorLoginBtn.addEventListener('click', () => toggleLoginForms('supervisor'));
-
+        showKioskBtn.addEventListener('click', () => showScreen('kiosk-screen'));
+        kioskBackBtn.addEventListener('click', () => showScreen('login-screen'));
         adminLoginForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const username = e.target['admin-username'].value;
@@ -446,36 +573,34 @@
                 showScreen('admin-dashboard');
                 renderAdminDashboard();
                 logActivity('Admin logged in.');
+                startSessionTimers();
+                adminChatBox.addEventListener('click', () => { adminChatNotification.style.display = 'none'; });
             } else {
                 adminLoginMessage.textContent = 'INVALID CREDENTIALS.';
             }
         });
-
         supervisorLoginForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const id = e.target['supervisor-id'].value;
             const password = e.target['supervisor-password'].value;
-            const supervisor = appData.supervisors.find(sup => sup.id === id && sup.password === password);
-            if (supervisor && !supervisor.isBlocked) {
-                appData.currentUser = { role: 'supervisor', id: supervisor.id, name: supervisor.name };
+            const supervisor = appData.supervisors.find(sup => sup.id === id);
+            if (supervisor && supervisor.password === password) {
+                appData.currentUser = { role: 'supervisor', id: supervisor.id, name: supervisor.name, photo: supervisor.photo };
                 showScreen('supervisor-dashboard');
                 renderSupervisorDashboard();
                 logActivity(`Supervisor ${supervisor.name} logged in.`);
-            } else if (supervisor && supervisor.isBlocked) {
-                supervisorLoginMessage.textContent = 'YOUR ACCOUNT HAS BEEN BLOCKED.';
+                startSessionTimers();
+                supervisorChatBox.addEventListener('click', () => { supervisorChatNotification.style.display = 'none'; });
             } else {
                 supervisorLoginMessage.textContent = 'INVALID ID OR PASSWORD.';
             }
         });
-        
         forgotPasswordBtn.addEventListener('click', () => {
             passwordResetModal.style.display = 'block';
         });
-
         cancelResetBtn.addEventListener('click', () => {
             passwordResetModal.style.display = 'none';
         });
-
         passwordResetForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const name = e.target['reset-name'].value;
@@ -494,55 +619,92 @@
                 resetMessage.textContent = 'DETAILS DO NOT MATCH. PLEASE CHECK YOUR INFORMATION.';
             }
         });
-
         document.getElementById('admin-logout-btn').addEventListener('click', () => {
             logActivity('Admin logged out.');
             appData.currentUser = null;
             showScreen('login-screen');
+            clearInterval(sessionTimerInterval);
         });
-        
         document.getElementById('supervisor-logout-btn').addEventListener('click', () => {
             logActivity(`Supervisor ${appData.currentUser.name} logged out.`);
             appData.currentUser = null;
             showScreen('login-screen');
+            clearInterval(sessionTimerInterval);
         });
-
         function showScreen(screenId) {
             loginScreen.style.display = 'none';
             adminDashboard.style.display = 'none';
             supervisorDashboard.style.display = 'none';
+            kioskScreen.style.display = 'none';
             document.getElementById(screenId).style.display = 'block';
+            if (screenId === 'kiosk-screen') {
+                renderKioskStations();
+            }
         }
-        
         // --- Admin Dashboard Functions ---
         function renderAdminDashboard() {
-            renderSupervisorList();
+            renderUserList();
             renderStationStatusAdmin();
-            renderChat(adminChatBox);
+            renderChat(adminChatBox, 'admin');
         }
-
+        supervisorRegPasswordInput.addEventListener('input', (e) => {
+            const password = e.target.value;
+            checkPasswordStrength(password, supervisorPasswordStrength);
+        });
+        passwordChangeForm.addEventListener('input', (e) => {
+            if (e.target.id === 'new-password') {
+                checkPasswordStrength(e.target.value, newPasswordStrength);
+            }
+        });
+        function checkPasswordStrength(password, element) {
+            const strongRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\\$%\\^&\\*])(?=.{8,})");
+            const mediumRegex = new RegExp("^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{6,})");
+            if (strongRegex.test(password)) {
+                element.textContent = 'Strong';
+                element.className = 'password-strength strong';
+            } else if (mediumRegex.test(password)) {
+                element.textContent = 'Medium';
+                element.className = 'password-strength medium';
+            } else {
+                element.textContent = 'Weak';
+                element.className = 'password-strength weak';
+            }
+        }
         studentRegisterForm.addEventListener('submit', (e) => {
             e.preventDefault();
+            const studentId = e.target['student-id'].value;
+            if (appData.students.find(s => s.id === studentId)) {
+                studentRegisterMessage.textContent = `ERROR: STUDENT WITH ID ${studentId} ALREADY EXISTS.`;
+                studentRegisterMessage.className = 'text-center mt-2 text-neon-red';
+                return;
+            }
             const student = {
                 name: e.target['student-name'].value,
-                id: e.target['student-id'].value,
+                id: studentId,
                 hostel: e.target['student-hostel'].value,
                 program: e.target['student-program'].value,
                 year: e.target['student-year'].value,
-                photo: e.target['student-photo'].files[0] ? URL.createObjectURL(e.target['student-photo'].files[0]) : null
+                photo: e.target['student-photo'].files[0] ? URL.createObjectURL(e.target['student-photo'].files[0]) : null,
+                stationHistory: []
             };
             appData.students.push(student);
             studentRegisterForm.reset();
             studentRegisterMessage.textContent = `STUDENT ${student.name} REGISTERED SUCCESSFULLY!`;
             studentRegisterMessage.className = 'text-center mt-2 text-neon-green';
             logActivity(`ADMIN REGISTERED STUDENT ${student.name} (ID: ${student.id}).`);
+            renderUserList();
         });
-
         supervisorRegisterForm.addEventListener('submit', (e) => {
             e.preventDefault();
+            const supervisorId = e.target['supervisor-reg-id'].value;
+            if (appData.supervisors.find(s => s.id === supervisorId)) {
+                supervisorRegisterMessage.textContent = `ERROR: SUPERVISOR WITH ID ${supervisorId} ALREADY EXISTS.`;
+                supervisorRegisterMessage.className = 'text-center mt-2 text-neon-red';
+                return;
+            }
             const supervisor = {
                 name: e.target['supervisor-name'].value,
-                id: e.target['supervisor-reg-id'].value,
+                id: supervisorId,
                 email: e.target['supervisor-email'].value,
                 password: e.target['supervisor-reg-password'].value,
                 photo: e.target['supervisor-photo'].files[0] ? URL.createObjectURL(e.target['supervisor-photo'].files[0]) : null,
@@ -550,70 +712,151 @@
             };
             appData.supervisors.push(supervisor);
             supervisorRegisterForm.reset();
+            supervisorPasswordStrength.textContent = '';
             supervisorRegisterMessage.textContent = `SUPERVISOR ${supervisor.name} REGISTERED SUCCESSFULLY!`;
             supervisorRegisterMessage.className = 'text-center mt-2 text-neon-green';
-            renderSupervisorList();
+            renderUserList();
             logActivity(`ADMIN REGISTERED NEW SUPERVISOR ${supervisor.name} (ID: ${supervisor.id}).`);
         });
-        
-        function renderSupervisorList() {
-            supervisorList.innerHTML = '';
-            appData.supervisors.forEach(sup => {
-                const supervisorItem = document.createElement('div');
-                supervisorItem.className = 'system-panel flex-container';
-                supervisorItem.innerHTML = `
+        userSearchInput.addEventListener('input', () => {
+            renderUserList();
+        });
+        function renderUserList() {
+            userList.innerHTML = '';
+            const searchTerm = userSearchInput.value.toLowerCase();
+            const allUsers = [...appData.students, ...appData.supervisors];
+            const filteredUsers = allUsers.filter(user =>
+                user.name.toLowerCase().includes(searchTerm) || user.id.toLowerCase().includes(searchTerm)
+            );
+            filteredUsers.forEach(user => {
+                const userItem = document.createElement('div');
+                userItem.className = 'system-panel flex-container';
+                const photoHtml = user.photo ? `<img src="${user.photo}" alt="${user.name}" style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 1px dashed #00ff00;">` : `<div style="width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; background: #333; border-radius: 50%;">N/A</div>`;
+                const userType = user.hasOwnProperty('program') ? 'Student' : 'Supervisor';
+                const statusHtml = user.isBlocked ? `<p class="text-xs text-neon-red">BLOCKED</p>` : `<p class="text-xs text-neon-green">ACTIVE</p>`;
+                userItem.innerHTML = `
                     <div style="display:flex; gap: 1rem; align-items: center;">
-                        ${sup.photo ? `<img src="${sup.photo}" alt="${sup.name}" style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 1px dashed #00ff00;">` : `<div style="width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; background: #333; border-radius: 50%;">N/A</div>`}
+                        ${photoHtml}
                         <div>
-                            <p class="text-xl">${sup.name} (${sup.id})</p>
-                            <p class="text-sm">${sup.email}</p>
-                            <p class="text-xs ${sup.isBlocked ? 'text-neon-red' : 'text-neon-green'}">${sup.isBlocked ? 'BLOCKED' : 'ACTIVE'}</p>
+                            <p class="text-xl">${user.name} (${user.id})</p>
+                            <p class="text-sm">${userType}: ${user.email || user.program}</p>
+                            ${userType === 'Supervisor' ? statusHtml : ''}
                         </div>
                     </div>
                     <div style="display: flex; gap: 0.5rem;">
-                        <button onclick="toggleSupervisorBlock('${sup.id}')" class="btn-warning" style="background-color: ${sup.isBlocked ? '#00cc00' : '#ffff33'}; border-color: ${sup.isBlocked ? '#00cc00' : '#ffff33'}; color: #000;">
-                            ${sup.isBlocked ? 'UNBLOCK' : 'BLOCK'}
-                        </button>
-                        <button onclick="deleteSupervisor('${sup.id}')" class="btn-danger" style="background-color: #ff3333; border-color: #ff3333; color: #000;">DELETE</button>
+                        ${userType === 'Supervisor' ? `
+                            <button onclick="toggleSupervisorBlock('${user.id}')" class="btn-warning" style="background-color: ${user.isBlocked ? '#00cc00' : '#ffff33'}; border-color: ${user.isBlocked ? '#00cc00' : '#ffff33'}; color: #000;">
+                                ${user.isBlocked ? 'UNBLOCK' : 'BLOCK'}
+                            </button>
+                        ` : ''}
+                        <button onclick="showUserDetail('${user.id}', '${userType.toLowerCase()}')" class="btn-primary" style="background-color: #00aaff; border-color: #00aaff; color: #000;">VIEW / EDIT</button>
+                        <button onclick="deleteUser('${user.id}', '${userType.toLowerCase()}')" class="btn-danger" style="background-color: #ff3333; border-color: #ff3333; color: #000;">DELETE</button>
                     </div>
                 `;
-                supervisorList.appendChild(supervisorItem);
+                userList.appendChild(userItem);
             });
         }
-        
+        window.showUserDetail = (id, type) => {
+            const user = type === 'student' ? appData.students.find(s => s.id === id) : appData.supervisors.find(s => s.id === id);
+            if (!user) return;
+            userModalTitle.textContent = `${type.toUpperCase()} PROFILE: ${user.name}`;
+            let contentHtml = `<input type="hidden" id="edit-user-id" value="${user.id}">`;
+            contentHtml += `<input type="hidden" id="edit-user-type" value="${type}">`;
+            contentHtml += `<label class="text-neon-green">Name:</label><input type="text" id="edit-name" value="${user.name}" required>`;
+            contentHtml += `<label class="text-neon-green">ID:</label><input type="text" value="${user.id}" disabled>`;
+            if (type === 'student') {
+                contentHtml += `<label class="text-neon-green">Hostel:</label><input type="text" id="edit-hostel" value="${user.hostel}" required>`;
+                contentHtml += `<label class="text-neon-green">Program:</label><input type="text" id="edit-program" value="${user.program}" required>`;
+                contentHtml += `<label class="text-neon-green">Year:</label><input type="number" id="edit-year" value="${user.year}" required>`;
+                contentHtml += `<h4 class="text-xl text-neon-yellow mt-4">STATION USAGE HISTORY:</h4><ul style="height: 150px; overflow-y: auto; border: 1px dashed #ffff33; padding: 1rem;">`;
+                if(user.stationHistory && user.stationHistory.length > 0) {
+                    user.stationHistory.forEach(hist => {
+                        contentHtml += `<li>STATION ${hist.stationId} | ASSIGNED: ${new Date(hist.startTime).toLocaleString()}</li>`;
+                    });
+                } else {
+                    contentHtml += `<li>NO USAGE HISTORY FOUND.</li>`;
+                }
+                contentHtml += `</ul>`;
+            } else {
+                contentHtml += `<label class="text-neon-green">Email:</label><input type="email" id="edit-email" value="${user.email}" required>`;
+                contentHtml += `<h4 class="text-xl text-neon-yellow mt-4">ASSIGNED STUDENTS:</h4><ul style="height: 150px; overflow-y: auto; border: 1px dashed #ffff33; padding: 1rem;">`;
+                const assignedStudents = appData.stations.filter(s => s.assignedBy === user.name && s.isOccupied);
+                if(assignedStudents.length > 0) {
+                    assignedStudents.forEach(station => {
+                        contentHtml += `<li>STATION ${station.id}: ${station.assignedTo.name}</li>`;
+                    });
+                } else {
+                    contentHtml += `<li>NO STUDENTS CURRENTLY ASSIGNED.</li>`;
+                }
+                contentHtml += `</ul>`;
+            }
+            userModalContent.innerHTML = contentHtml;
+            userDetailModal.style.display = 'block';
+        };
+        document.getElementById('edit-user-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const id = e.target['edit-user-id'].value;
+            const type = e.target['edit-user-type'].value;
+            if (type === 'student') {
+                const student = appData.students.find(s => s.id === id);
+                if (student) {
+                    student.name = e.target['edit-name'].value;
+                    student.hostel = e.target['edit-hostel'].value;
+                    student.program = e.target['edit-program'].value;
+                    student.year = e.target['edit-year'].value;
+                    logActivity(`ADMIN UPDATED STUDENT ${student.name}'s details.`);
+                }
+            } else {
+                const supervisor = appData.supervisors.find(s => s.id === id);
+                if (supervisor) {
+                    supervisor.name = e.target['edit-name'].value;
+                    supervisor.email = e.target['edit-email'].value;
+                    logActivity(`ADMIN UPDATED SUPERVISOR ${supervisor.name}'s details.`);
+                }
+            }
+            closeModal('user-detail-modal');
+            renderUserList();
+        });
+        window.closeModal = (id) => {
+            document.getElementById(id).style.display = 'none';
+        };
         window.toggleSupervisorBlock = (id) => {
             const supervisor = appData.supervisors.find(sup => sup.id === id);
             if (supervisor) {
                 supervisor.isBlocked = !supervisor.isBlocked;
-                renderSupervisorList();
+                renderUserList();
                 logActivity(`ADMIN ${supervisor.isBlocked ? 'BLOCKED' : 'UNBLOCKED'} SUPERVISOR ${supervisor.name}.`);
             }
         };
-
-        window.deleteSupervisor = (id) => {
-            const supervisorIndex = appData.supervisors.findIndex(sup => sup.id === id);
-            if (supervisorIndex !== -1) {
-                const supervisorName = appData.supervisors[supervisorIndex].name;
-                appData.supervisors.splice(supervisorIndex, 1);
-                renderSupervisorList();
-                logActivity(`ADMIN DELETED SUPERVISOR ${supervisorName} (ID: ${id}).`);
+        window.deleteUser = (id, type) => {
+            const userArray = type === 'student' ? appData.students : appData.supervisors;
+            const userIndex = userArray.findIndex(user => user.id === id);
+            if (userIndex !== -1) {
+                const userName = userArray[userIndex].name;
+                userArray.splice(userIndex, 1);
+                renderUserList();
+                logActivity(`ADMIN DELETED ${type.toUpperCase()} ${userName} (ID: ${id}).`);
             }
         };
-
         function renderStationStatusAdmin() {
             stationStatusAdmin.innerHTML = '';
             appData.stations.forEach(station => {
-                const statusClass = station.isOccupied ? 'occupied' : 'unoccupied';
-                const statusText = station.isOccupied ? 'OCCUPIED' : 'UNOCCUPIED';
+                let statusClass = station.isOccupied ? 'occupied' : 'unoccupied';
+                if (station.statusFlag) {
+                    statusClass = 'needs-maintenance';
+                }
+                const statusText = station.isOccupied ? 'OCCUPIED' : (station.statusFlag ? station.statusFlag.toUpperCase() : 'UNOCCUPIED');
                 const assignedDetails = station.isOccupied ? `
                     <p class="text-sm">ASSIGNED TO: ${station.assignedTo.name}</p>
                     <p class="text-sm">ASSIGNED BY: ${station.assignedBy}</p>
+                    <p class="text-sm">TIME LEFT: <span id="timer-${station.id}-admin">--:--</span></p>
+                    <button onclick="unassignStation(${station.id}, 'admin')" class="btn-danger w-full mt-2" style="font-size: 0.75rem; padding: 0.25rem;">UNASSIGN</button>
                 ` : '';
                 const issueDetails = station.issue ? `
                     <p class="text-xs text-neon-yellow mt-2">ISSUE: ${station.issue}</p>
                 ` : '';
                 const stationCard = document.createElement('div');
-                stationCard.className = `station-card ${statusClass} ${station.issue ? 'has-issue' : ''}`;
+                stationCard.className = `station-card ${statusClass}`;
                 stationCard.innerHTML = `
                     <h3 class="text-xl font-bold">STATION ${station.id}</h3>
                     <p class="text-sm font-bold">${statusText}</p>
@@ -623,7 +866,36 @@
                 stationStatusAdmin.appendChild(stationCard);
             });
         }
-        
+        window.unassignStation = (id, unassignedBy) => {
+            const station = appData.stations.find(s => s.id === id);
+            if (station && station.isOccupied) {
+                const student = appData.students.find(s => s.id === station.assignedTo.id);
+                if (student) {
+                    student.stationHistory.push({
+                        stationId: station.id,
+                        startTime: new Date(station.sessionEndTime - station.sessionDuration * 60000).toISOString(),
+                        endTime: new Date().toISOString(),
+                    });
+                }
+                appData.stationUsageHistory.push({
+                    stationId: station.id,
+                    studentId: station.assignedTo.id,
+                    startTime: new Date(station.sessionEndTime - station.sessionDuration * 60000).toISOString(),
+                    endTime: new Date().toISOString(),
+                    duration: (Date.now() - (station.sessionEndTime - station.sessionDuration * 60000)) / 60000
+                });
+                station.isOccupied = false;
+                station.assignedTo = null;
+                station.assignedBy = null;
+                station.sessionEndTime = null;
+                station.sessionDuration = null;
+                alert(`STATION ${id} HAS BEEN UNASSIGNED FROM ${student.name}.`);
+                renderStationStatusAdmin();
+                renderStationStatusSupervisor();
+                renderStationSelectors();
+                logActivity(`${unassignedBy.toUpperCase()} UNASSIGNED STATION ${id} FROM STUDENT ${student.name}.`);
+            }
+        };
         function generateReport() {
             const totalSupervisors = appData.supervisors.length;
             const totalStudents = appData.students.length;
@@ -637,24 +909,85 @@
             document.getElementById('report-unoccupied-stations').textContent = unoccupiedStations;
             logActivity('ADMIN GENERATED A SYSTEM REPORT.');
         }
-
+        customReportForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const startDate = new Date(e.target['report-start-date'].value);
+            const endDate = new Date(e.target['report-end-date'].value);
+            const metrics = Array.from(e.target.querySelectorAll('input[name="metric"]:checked')).map(cb => cb.value);
+            let reportHtml = '<h3>CUSTOM REPORT</h3>';
+            reportHtml += `<p>Date Range: ${startDate.toDateString()} to ${endDate.toDateString()}</p>`;
+            const filteredHistory = appData.stationUsageHistory.filter(h => new Date(h.startTime) >= startDate && new Date(h.endTime) <= endDate);
+            if (metrics.includes('mostUsed') || metrics.includes('leastUsed')) {
+                const usageCounts = filteredHistory.reduce((acc, curr) => {
+                    acc[curr.stationId] = (acc[curr.stationId] || 0) + 1;
+                    return acc;
+                }, {});
+                const sortedStations = Object.entries(usageCounts).sort(([, a], [, b]) => b - a);
+                if (metrics.includes('mostUsed')) {
+                    reportHtml += `<h4>MOST USED STATIONS:</h4><ol>`;
+                    sortedStations.slice(0, 5).forEach(([stationId, count]) => {
+                        reportHtml += `<li>STATION ${stationId}: ${count} TIMES</li>`;
+                    });
+                    reportHtml += `</ol>`;
+                }
+                if (metrics.includes('leastUsed')) {
+                    const leastUsed = sortedStations.slice(-5).reverse();
+                    reportHtml += `<h4>LEAST USED STATIONS:</h4><ol>`;
+                    leastUsed.forEach(([stationId, count]) => {
+                        reportHtml += `<li>STATION ${stationId}: ${count} TIMES</li>`;
+                    });
+                    reportHtml += `</ol>`;
+                }
+            }
+            if (metrics.includes('averageSession')) {
+                const totalDuration = filteredHistory.reduce((sum, h) => sum + h.duration, 0);
+                const avgDuration = filteredHistory.length > 0 ? (totalDuration / filteredHistory.length).toFixed(2) : 0;
+                reportHtml += `<h4>AVERAGE SESSION TIME:</h4><p>${avgDuration} MINUTES</p>`;
+            }
+            customReportOutput.innerHTML = reportHtml;
+            customReportOutput.style.display = 'block';
+            logActivity('ADMIN GENERATED A CUSTOM REPORT.');
+        });
         function logActivity(message) {
             const time = new Date().toLocaleTimeString();
             const li = document.createElement('li');
             li.textContent = `[${time}] ${message}`;
             activityLog.prepend(li);
         }
-
+        broadcastForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const message = e.target['broadcast-message-input'].value;
+            appData.broadcastMessage = message;
+            alert('BROADCAST MESSAGE SENT TO ALL SUPERVISORS.');
+            logActivity(`ADMIN SENT AN EMERGENCY BROADCAST: "${message}"`);
+            e.target.reset();
+        });
+        window.dismissBroadcast = () => {
+            appData.broadcastMessage = null;
+            broadcastMessageEl.style.display = 'none';
+        };
         // --- Supervisor Dashboard Functions ---
         function renderSupervisorDashboard() {
+            renderSupervisorProfile();
             renderStationSelectors();
             renderStationStatusSupervisor();
-            renderChat(supervisorChatBox);
+            renderChat(supervisorChatBox, 'supervisor');
+            if (appData.broadcastMessage) {
+                broadcastTextEl.textContent = appData.broadcastMessage;
+                broadcastMessageEl.style.display = 'block';
+            }
         }
-
+        function renderSupervisorProfile() {
+            const supervisor = appData.supervisors.find(sup => sup.id === appData.currentUser.id);
+            if (supervisor && supervisor.photo) {
+                supervisorProfilePhoto.innerHTML = `<img src="${supervisor.photo}" alt="${supervisor.name}" style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover;">`;
+            } else {
+                supervisorProfilePhoto.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#00ff00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`;
+            }
+        }
         function renderStationSelectors() {
             stationSelect.innerHTML = '<option value="">SELECT A STATION</option>';
-            issueStationSelect.innerHTML = '<option value="">SELECT A STATION WITH ISSUE</option>';
+            issueStationSelect.innerHTML = '<option value="">SELECT A STATION</option>';
             appData.stations.forEach(station => {
                 const option = document.createElement('option');
                 option.value = station.id;
@@ -667,14 +1000,35 @@
                 const issueOption = document.createElement('option');
                 issueOption.value = station.id;
                 issueOption.textContent = `STATION ${station.id}`;
+                if(station.statusFlag){
+                    issueOption.textContent += ` (${station.statusFlag})`;
+                }
                 issueStationSelect.appendChild(issueOption);
             });
         }
-
+        studentLookupInput.addEventListener('input', () => {
+            const studentLookup = studentLookupInput.value.trim();
+            const student = appData.students.find(s => s.id === studentLookup || s.name.toLowerCase() === studentLookup.toLowerCase());
+            if (student) {
+                studentProfilePreview.style.display = 'flex';
+                studentPhotoPreview.src = student.photo || 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDgiIGhlaWdodD0iMTA4IiB2aWV3Qm94PSIwIDAgMjQgMjQiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwZmYwMCIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXVzZXIiPjxwYXRoIGQ9Ik0xOSAyMXYtMmE0IDQgMCAwIDAtNC00SDlhNCA0IDAgMCAwLTQgNHYyIi8+PGNpcmNsZSBjeD0iMTIiIGN5PSI3IiByPSI0Ii8+PC9zdmc+';
+                studentDetailsPreview.innerHTML = `
+                    <p class="text-xl text-neon-green">${student.name}</p>
+                    <p class="text-sm">ID: ${student.id}</p>
+                    <p class="text-sm">Hostel: ${student.hostel}</p>
+                `;
+                studentLookupMessage.textContent = '';
+            } else {
+                studentProfilePreview.style.display = 'none';
+                studentLookupMessage.textContent = 'STUDENT NOT FOUND. PLEASE CHECK THE ID OR NAME.';
+                studentLookupMessage.className = 'text-center text-neon-red mt-2';
+            }
+        });
         stationAssignmentForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const stationId = parseInt(e.target['station-select'].value);
             const studentLookup = e.target['student-lookup-input'].value;
+            const duration = parseInt(e.target['session-duration'].value);
             const student = appData.students.find(s => s.id === studentLookup || s.name.toLowerCase() === studentLookup.toLowerCase());
             if (!student) {
                 studentLookupMessage.textContent = 'ERROR: STUDENT DOES NOT EXIST IN THE SYSTEM.';
@@ -686,32 +1040,39 @@
                 station.isOccupied = true;
                 station.assignedTo = student;
                 station.assignedBy = appData.currentUser.name;
-                studentLookupMessage.textContent = `STATION ${stationId} SUCCESSFULLY ASSIGNED TO ${student.name}.`;
+                station.sessionEndTime = Date.now() + duration * 60000;
+                station.sessionDuration = duration;
+                studentLookupMessage.textContent = `SUCCESS: STATION ${stationId} ASSIGNED TO ${student.name}.`;
                 studentLookupMessage.className = 'text-center text-neon-green mt-2';
                 stationAssignmentForm.reset();
+                studentProfilePreview.style.display = 'none';
                 renderStationStatusSupervisor();
                 renderStationSelectors();
                 renderStationStatusAdmin();
-                logActivity(`SUPERVISOR ${appData.currentUser.name} ASSIGNED STATION ${stationId} TO STUDENT ${student.name}.`);
+                logActivity(`SUPERVISOR ${appData.currentUser.name} ASSIGNED STATION ${stationId} TO STUDENT ${student.name} for ${duration} minutes.`);
             } else {
                 studentLookupMessage.textContent = 'STATION IS ALREADY OCCUPIED OR INVALID.';
                 studentLookupMessage.className = 'text-center text-neon-red mt-2';
             }
         });
-
         function renderStationStatusSupervisor() {
             stationStatusSupervisor.innerHTML = '';
             appData.stations.forEach(station => {
-                const statusClass = station.isOccupied ? 'occupied' : 'unoccupied';
-                const statusText = station.isOccupied ? 'OCCUPIED' : 'UNOCCUPIED';
+                let statusClass = station.isOccupied ? 'occupied' : 'unoccupied';
+                if (station.statusFlag) {
+                    statusClass = 'needs-maintenance';
+                }
+                const statusText = station.isOccupied ? 'OCCUPIED' : (station.statusFlag ? station.statusFlag.toUpperCase() : 'UNOCCUPIED');
                 const assignedDetails = station.isOccupied ? `
                     <p class="text-sm">BY: ${station.assignedTo.name}</p>
+                    <p class="text-sm">TIME LEFT: <span id="timer-${station.id}-supervisor">--:--</span></p>
+                    <button onclick="unassignStation(${station.id}, 'supervisor')" class="btn-danger w-full mt-2" style="font-size: 0.75rem; padding: 0.25rem;">UNASSIGN</button>
                 ` : '';
                 const issueDetails = station.issue ? `
                     <p class="text-xs text-neon-yellow mt-2">ISSUE: ${station.issue}</p>
                 ` : '';
                 const stationCard = document.createElement('div');
-                stationCard.className = `station-card ${statusClass} ${station.issue ? 'has-issue' : ''}`;
+                stationCard.className = `station-card ${statusClass}`;
                 stationCard.innerHTML = `
                     <h3 class="text-xl font-bold">STATION ${station.id}</h3>
                     <p class="text-sm font-bold">${statusText}</p>
@@ -721,30 +1082,36 @@
                 stationStatusSupervisor.appendChild(stationCard);
             });
         }
-        
         issueReportForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const stationId = parseInt(e.target['issue-station-select'].value);
+            const statusFlag = e.target['issue-type'].value;
             const description = e.target['issue-description'].value;
             const station = appData.stations.find(s => s.id === stationId);
             if (station) {
+                station.statusFlag = statusFlag;
                 station.issue = description;
+                appData.maintenanceLog.push({
+                    stationId: station.id,
+                    reportedBy: appData.currentUser.name,
+                    statusFlag: statusFlag,
+                    description: description,
+                    date: new Date()
+                });
                 alert(`ISSUE REPORTED FOR STATION ${stationId}: ${description}`);
                 issueReportForm.reset();
                 renderStationStatusSupervisor();
                 renderStationStatusAdmin();
-                logActivity(`SUPERVISOR ${appData.currentUser.name} REPORTED AN ISSUE WITH STATION ${stationId}.`);
+                renderStationSelectors();
+                logActivity(`SUPERVISOR ${appData.currentUser.name} REPORTED AN ISSUE WITH STATION ${stationId} (${statusFlag}).`);
             }
         });
-        
         supervisorChangePasswordBtn.addEventListener('click', () => {
             passwordChangeModal.style.display = 'block';
         });
-
         cancelChangeBtn.addEventListener('click', () => {
             passwordChangeModal.style.display = 'none';
         });
-
         passwordChangeForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const currentPassword = e.target['current-password'].value;
@@ -761,9 +1128,52 @@
                 changePasswordMessage.textContent = 'INVALID CURRENT PASSWORD.';
             }
         });
-        
+        // --- Student Kiosk Functions ---
+        function renderKioskStations() {
+            kioskStationList.innerHTML = '';
+            appData.stations.forEach(station => {
+                let statusClass = station.isOccupied ? 'occupied' : 'unoccupied';
+                if (station.statusFlag) {
+                    statusClass = 'needs-maintenance';
+                }
+                const statusText = station.isOccupied ? 'OCCUPIED' : (station.statusFlag ? station.statusFlag.toUpperCase() : 'UNOCCUPIED');
+                const stationCard = document.createElement('div');
+                stationCard.className = `kiosk-card station-card ${statusClass}`;
+                stationCard.innerHTML = `
+                    <h3 class="text-xl font-bold">STATION ${station.id}</h3>
+                    <p class="text-sm font-bold">${statusText}</p>
+                `;
+                kioskStationList.appendChild(stationCard);
+            });
+        }
+        // --- Session Timer Functions ---
+        function startSessionTimers() {
+            clearInterval(sessionTimerInterval);
+            sessionTimerInterval = setInterval(() => {
+                const now = Date.now();
+                appData.stations.forEach(station => {
+                    if (station.isOccupied) {
+                        const timeLeftMs = station.sessionEndTime - now;
+                        if (timeLeftMs <= 0) {
+                            unassignStation(station.id, 'auto-timer');
+                        } else {
+                            const minutes = Math.floor(timeLeftMs / 60000);
+                            const seconds = Math.floor((timeLeftMs % 60000) / 1000);
+                            const timerElAdmin = document.getElementById(`timer-${station.id}-admin`);
+                            if (timerElAdmin) {
+                                timerElAdmin.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                            }
+                            const timerElSupervisor = document.getElementById(`timer-${station.id}-supervisor`);
+                            if (timerElSupervisor) {
+                                timerElSupervisor.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                            }
+                        }
+                    }
+                });
+            }, 1000);
+        }
         // --- Chat Functions ---
-        function renderChat(chatBox) {
+        function renderChat(chatBox, userRole) {
             chatBox.innerHTML = '';
             appData.chatMessages.forEach(msg => {
                 const messageDiv = document.createElement('div');
@@ -772,8 +1182,14 @@
                 chatBox.appendChild(messageDiv);
             });
             chatBox.scrollTop = chatBox.scrollHeight;
+            if (userRole === 'admin') {
+                lastAdminMessageTime = Date.now();
+                adminChatNotification.style.display = 'none';
+            } else if (userRole === 'supervisor') {
+                lastSupervisorMessageTime = Date.now();
+                supervisorChatNotification.style.display = 'none';
+            }
         }
-
         adminChatForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const input = document.getElementById('admin-chat-input');
@@ -785,10 +1201,11 @@
             };
             appData.chatMessages.push(message);
             input.value = '';
-            renderChat(adminChatBox);
-            renderChat(supervisorChatBox);
+            renderChat(adminChatBox, 'admin');
+            if (supervisorDashboard.style.display === 'none' || lastSupervisorMessageTime < Date.now()) {
+                supervisorChatNotification.style.display = 'block';
+            }
         });
-
         supervisorChatForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const input = document.getElementById('supervisor-chat-input');
@@ -800,13 +1217,15 @@
             };
             appData.chatMessages.push(message);
             input.value = '';
-            renderChat(supervisorChatBox);
-            renderChat(adminChatBox);
+            renderChat(supervisorChatBox, 'supervisor');
+            if (adminDashboard.style.display === 'none' || lastAdminMessageTime < Date.now()) {
+                adminChatNotification.style.display = 'block';
+            }
         });
-        
         // --- Initialization ---
         document.addEventListener('DOMContentLoaded', () => {
             initializeData();
+            updateWelcomeMessage();
             toggleLoginForms('admin');
         });
     </script>
